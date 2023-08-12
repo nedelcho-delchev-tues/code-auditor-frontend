@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -14,20 +14,67 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import { Avatar} from '@mui/material';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import { mainListItems } from './listItems';
+import { getCurrentUser } from '../services/authenticationService';
+
+function stringToColor(string) {
+    let hash = 0;
+    let i;
+
+    for (i = 0; i < string.length; i += 1) {
+        hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = '#';
+
+    for (i = 0; i < 3; i += 1) {
+        const value = (hash >> (i * 8)) & 0xff;
+        color += `00${value.toString(16)}`.slice(-2);
+    }
+
+    return color;
+}
+
+function stringAvatar(name) {
+    return {
+        sx: {
+            bgcolor: stringToColor(name),
+        },
+        children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+    };
+}
 
 function Copyright(props) {
     return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        align="center"
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          width: '50%',
+          padding: '10px'
+        }}
+        {...props}
+      >
+        {'Copyright © '}
+        <Link color="inherit" href="https://mui.com/">
+          Code Auditor
+        </Link>{' '}
+        {new Date().getFullYear()}
+        {'.'}
+      </Typography>
     );
-}
+  }
 
 const drawerWidth = 240;
 
@@ -77,7 +124,50 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const defaultTheme = createTheme();
 
 export default function Dashboard() {
-    const [open, setOpen] = React.useState(true);
+
+    const [open, setOpen] = useState(true);
+
+    const [user, setUser] = useState([]);
+
+    useEffect(() => {
+        const token = getCurrentUser();
+        fetch(`http://localhost:8080/api/v1/user`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        }).then(response => response.json())
+            .then(data => {
+                setUser(data);
+            })
+            .catch(error => {
+                console.error('Error fetching user:', error);
+            });
+    }, []);
+
+    const [assignments, setAssignments] = useState([]);
+
+    useEffect(() => {
+        const token = getCurrentUser();
+        fetch('http://localhost:8080/api/v1/assignment',
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                setAssignments(data);
+            })
+            .catch(error => {
+                console.error('Error fetching assignments:', error);
+            });
+    }, []);
+
+
     const toggleDrawer = () => {
         setOpen(!open);
     };
@@ -89,7 +179,7 @@ export default function Dashboard() {
                 <AppBar position="absolute" open={open}>
                     <Toolbar
                         sx={{
-                            pr: '24px', // keep right padding when drawer closed
+                            pr: '24px',
                         }}
                     >
                         <IconButton
@@ -113,10 +203,8 @@ export default function Dashboard() {
                         >
                             Dashboard
                         </Typography>
-                        <IconButton color="inherit">
-                            {/* <Badge badgeContent={4} color="secondary">
-                                <NotificationsIcon />
-                            </Badge> */}
+                        <IconButton>
+                            <Avatar {...stringAvatar(user.firstName + " " + user.lastName)} />
                         </IconButton>
                     </Toolbar>
                 </AppBar>
@@ -151,6 +239,28 @@ export default function Dashboard() {
                     }}
                 >
                     <Toolbar />
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Заглавие</TableCell>
+                                    <TableCell>Създадено от</TableCell>
+                                    <TableCell>Създадено на</TableCell>
+                                    {/* Add more header cells here */}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {assignments.map(assignment => (
+                                    <TableRow key={assignment.id}>
+                                        <TableCell>{assignment.title}</TableCell>
+                                        <TableCell>{assignment.user.firstName} {assignment.user.lastName}</TableCell>
+                                        <TableCell>{new Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(assignment.createdTime)}</TableCell>
+                                        {/* Add more cells for other properties */}
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                         <Grid container spacing={3}>
                             {/* Chart */}

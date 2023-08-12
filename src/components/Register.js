@@ -41,8 +41,6 @@ export default function Register() {
     try {
       const token = await register(registerUserDTO);
 
-      //console.log('JWT Token:', token);
-
       localStorage.setItem("token", token);
 
       navigate("/dashboard");

@@ -28,7 +28,7 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function SignIn() {
+export default function Login() {
   const navigate = useNavigate()
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,8 +36,6 @@ export default function SignIn() {
     const data = new FormData(event.currentTarget);
     try{
         const token = await login(data.get("email"), data.get("password"));
-
-        //console.log('JWT Token:', token);
     
         localStorage.setItem("token", token);
         navigate("/dashboard")

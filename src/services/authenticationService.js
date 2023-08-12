@@ -52,7 +52,7 @@ export async function register(data) {
 }
 
 export function getCurrentUser(){
-  return JSON.parse(localStorage.getItem('token'));
+  return localStorage.getItem('token');
 }
 
 export const isAuthenticated = () => {
