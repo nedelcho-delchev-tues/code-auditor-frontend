@@ -29,7 +29,7 @@ export async function logout() {
   if (response.ok) {
     localStorage.removeItem("token");
   } else {
-    throw new Error('Login failed');
+    throw new Error('Logout failed');
   }
 
 }

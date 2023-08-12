@@ -49,7 +49,7 @@ export default function Register() {
     }
   };
 
-  const isFieldEmpty = (value) => value.trim() === '';
+  //const isFieldEmpty = (value) => value.trim() === '';
 
   return (
     <ThemeProvider theme={defaultTheme}>
