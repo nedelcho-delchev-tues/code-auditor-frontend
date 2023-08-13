@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useParams } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
@@ -8,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Box } from '@mui/system';
 import { styled } from '@mui/material/styles';
 import { getCurrentUser } from '../services/authenticationService';
+import { isSubmissionPresent } from '../services/studentSubmissionService';
 import '../dragdrop.css'
 
 const maxUploadSize = 100 * 1024 * 1024 //100mb
@@ -16,14 +17,43 @@ const ErrorTypography = styled(Typography)({
     color: 'red',
 });
 
+const token = getCurrentUser();
+
 const DragDrop = () => {
     const { id } = useParams();
     const [zipFile, setZipFile] = useState(null);
+    const [submission, setSubmission] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
+
+    useEffect(() => {
+        fetch(`http://localhost:8080/api/v1/assignment/${id}/get_submission`,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                setSubmission(data);
+            })
+            .catch(error => {
+                console.error('Error fetching submission:', error);
+            });
+    }, [id])
+
+    useEffect(() => {
+        if (isSubmissionPresent(submission)) {
+            const fileContent = new Blob([submission.content])
+            new File([fileContent], submission.fileName)
+            setZipFile(submission)
+        }
+    }, [submission])
+
+
 
     const onDrop = (acceptedFiles, rejectedFiles) => {
         const validZipFiles = acceptedFiles.filter(file => file.type === 'application/zip');
-
         if (rejectedFiles.length > 0) {
             const errorFile = rejectedFiles[0];
             if (errorFile.size > maxUploadSize) {
@@ -39,7 +69,6 @@ const DragDrop = () => {
 
             formData.append('file', validZipFiles[0]);
 
-            const token = getCurrentUser();
             fetch(`http://localhost:8080/api/v1/assignment/${id}/submit-assignment`,
                 {
                     method: 'POST',
@@ -56,7 +85,19 @@ const DragDrop = () => {
     }
 
     const removeFile = () => {
+        fetch(`http://localhost:8080/api/v1/assignment/${id}/delete_submission`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .catch(error => {
+                console.error('Error deleting assignment:', error);
+            });
         setZipFile(null);
+        window.location.reload();
     };
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -89,7 +130,7 @@ const DragDrop = () => {
                 ) : zipFile ? (
                     <div className="file-item">
                         <Typography variant="body1" gutterBottom>
-                            {zipFile.name}
+                            {zipFile.name ? zipFile.name : zipFile.fileName}
                         </Typography>
                         <IconButton variant="outlined" onClick={removeFile}>
                             <DeleteIcon />

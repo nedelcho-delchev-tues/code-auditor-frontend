@@ -147,7 +147,7 @@ function DashboardDrawer() {
                                 noWrap
                                 sx={{ flexGrow: 1 }}
                             >
-                                Dashboard
+                                Табло
                             </Typography>
                             <IconButton>
                                 <Avatar {...stringAvatar(user.firstName + " " + user.lastName)} />

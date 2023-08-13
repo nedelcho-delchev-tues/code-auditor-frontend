@@ -34,11 +34,11 @@ export default function Login() {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
-    try{
-        const token = await login(data.get("email"), data.get("password"));
-    
-        localStorage.setItem("token", token);
-        navigate("/dashboard")
+    try {
+      const token = await login(data.get("email"), data.get("password"));
+
+      localStorage.setItem("token", token);
+      navigate("/dashboard")
     } catch (error) {
       console.error('Login error:', error.message);
     }

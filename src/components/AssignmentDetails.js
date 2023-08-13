@@ -1,4 +1,4 @@
-import { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useParams } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,17 +11,23 @@ import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import { timestampToDate } from '../utils/Utils';
 import DragDrop from './DragDrop';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import { timestampToDate } from '../utils/Utils';
+import { isSubmissionPresent } from '../services/studentSubmissionService';
+
 
 const defaultTheme = createTheme();
+
+const token = getCurrentUser();
 
 function AssignmentDetails() {
   const { id } = useParams();
   const [assignment, setAssignment] = useState({});
+  const [submission, setSubmission] = useState({});
 
   useEffect(() => {
-    const token = getCurrentUser();
     fetch(`http://localhost:8080/api/v1/assignment/${id}`,
       {
         method: 'GET',
@@ -37,8 +43,26 @@ function AssignmentDetails() {
       .catch(error => {
         console.error('Error fetching assignments:', error);
       });
-  });
+  }, [id]);
 
+  useEffect(() => {
+    fetch(`http://localhost:8080/api/v1/assignment/${id}/get_submission`,
+      {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        setSubmission(data);
+      })
+      .catch(error => {
+        console.error('Error fetching submission:', error);
+      });
+  }, [id])
+
+  const submissionPresent = isSubmissionPresent(submission);
   return (
     <div>
       <ThemeProvider theme={defaultTheme}>
@@ -87,6 +111,35 @@ function AssignmentDetails() {
                     ))}
                 </List>
                 <DragDrop />
+                {submissionPresent && (
+                  <React.Fragment>
+                    <Typography variant="h5" gutterBottom>
+                      Детайли за предадената задача:
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                      Присъстват ли всички файлове ? : {submission.filesPresent ? <CheckIcon style={{
+                        color: "#34b233",
+                      }} /> : <CloseIcon style={{
+                        color: "#cf1020",
+                      }} />}
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                      Компилира ли се проекта ? : {submission.buildPassing ? <CheckIcon style={{
+                        color: "#34b233",
+                      }} /> : <CloseIcon style={{
+                        color: "#cf1020",
+                      }} />}
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                      Тук може да видите дали кодът има някакви проблеми:
+                    </Typography>
+                    <Box dangerouslySetInnerHTML={{
+                      __html: submission.problems
+                        ? decodeBase64ToHTML(submission.problems)
+                        : '',
+                    }} />
+                  </React.Fragment>
+                )}
               </Paper>
             </Box>
           </Box>
@@ -94,6 +147,11 @@ function AssignmentDetails() {
       </ThemeProvider>
     </div>
   );
+};
+
+const decodeBase64ToHTML = (base64String) => {
+  const decodedHTML = atob(base64String);
+  return decodedHTML;
 };
 
 export default AssignmentDetails;
