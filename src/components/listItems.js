@@ -12,7 +12,7 @@ export const mainListItems = (
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
-      <ListItemText primary="Табло" />
+      <ListItemText primary="Контролно Табло" />
     </ListItemButton>
     <ListItemButton component={Link} to="/assignments">
       <ListItemIcon>

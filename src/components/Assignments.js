@@ -27,14 +27,14 @@ import DashboardDrawer from './DashboardDrawer';
 
 const defaultTheme = createTheme();
 
-const canCreateAssignment = (user) => {
+const canOperateAssignments = (user) => {
     if (user.role !== 'ADMIN' && user.role !== 'PROFESSOR') return false;
 
-    const permissionList = user.authorities && Array.isArray(user.authorities)
-        ? user.authorities.map(authority => authority.authority)
-        : [];
+    // const permissionList = user.authorities && Array.isArray(user.authorities)
+    //     ? user.authorities.map(authority => authority.authority)
+    //     : [];
 
-    if (!permissionList.includes('admin:create') && !permissionList.includes('professor:create')) return false;
+    //if (!permissionList.includes('admin:create') && !permissionList.includes('professor:create')) return false;
 
     return true;
 };
@@ -51,6 +51,10 @@ function Assignments() {
         type: 'info',
         message: ''
     });
+    const [editingAssignment, setEditingAssignment] = useState(null);
+    const [dialogType, setDialogType] = useState('create');
+    const [refreshKey, setRefreshKey] = useState(0);
+
     const token = getCurrentUser();
 
     useEffect(() => {
@@ -66,24 +70,34 @@ function Assignments() {
     }, []);
 
     useEffect(() => {
+        fetchAssignments();
+    }, []);
+
+    const fetchAssignments = () => {
         fetch('http://localhost:8080/api/v1/assignment',
-            {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                setAssignments(data);
-            })
-            .catch(error => {
-                console.error('Error fetching assignments:', error);
-            });
-    }, [token]);
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            setAssignments(data);
+        })
+        .catch(error => {
+            console.error('Error fetching assignments:', error);
+        });
+    }
+
+    const handleRefresh = () => {
+        fetchAssignments();
+        setRefreshKey(prevKey => prevKey + 1);
+    }
 
     const handleOpen = () => {
+        setDialogType('create');
         setOpen(true);
     };
 
@@ -129,7 +143,6 @@ function Assignments() {
     };
 
     const handleSubmit = async (data) => {
-        console.log("ASSIGNEMNT" + JSON.stringify(data));
         try {
             const response = await fetch('http://localhost:8080/api/v1/assignment', {
                 method: 'POST',
@@ -140,10 +153,6 @@ function Assignments() {
                 },
                 body: JSON.stringify(data)
             });
-
-            if (!response.ok) {
-                
-            }
             const responseData = await response.json();
             setAlert({
                 open: true,
@@ -151,12 +160,122 @@ function Assignments() {
                 message: responseData.message
             });
         } catch (error) {
-            console.error('Error creating assignment:', error.message);
+            setAlert({
+                open: true,
+                type: 'error',
+                message: error.message
+            });
         }
         handleClose();
         setTitle("");
         setDescription("");
         setFileFields([{ value: '' }]);
+    }
+
+    const handleUpdate = async (data) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/v1/assignment/${parseInt(editingAssignment.id)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+
+                },
+                body: JSON.stringify(data)
+            });
+            const responseData = await response.json();
+            if (!response.ok) {
+                setAlert({
+                    open: true,
+                    type: 'error',
+                    message: response.message
+                });
+            }
+            setAlert({
+                open: true,
+                type: 'info',
+                message: responseData.message
+            });
+        } catch (error) {
+            setAlert({
+                open: true,
+                type: 'error',
+                message: error
+            });
+        }
+        handleClose();
+        // setTitle("");
+        // setDescription("");
+        // setFileFields([{ value: '' }]);
+    }
+
+    async function handleEditClick(assignmentId) {
+        try {
+            const response = await fetch(`http://localhost:8080/api/v1/assignment/${assignmentId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                setAlert({
+                    open: true,
+                    type: 'error',
+                    message: response.message
+                });
+            }
+
+            const responseData = await response.json();
+            const updatedFileFields = responseData.specialFiles.map(file => ({ value: file }));
+
+            setTitle(responseData.title);
+            setDescription(responseData.description);
+            setFileFields(updatedFileFields.length ? updatedFileFields : [{ value: '' }]);
+            setEditingAssignment(responseData);
+            setDialogType('update');
+            setOpen(true);
+        } catch (error) {
+            setAlert({
+                open: true,
+                type: 'info',
+                message: error
+            });
+        }
+    }
+
+    async function handleDeleteClick(assignmentId) {
+        try {
+            const response = await fetch(`http://localhost:8080/api/v1/assignment/${assignmentId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                setAlert({
+                    open: true,
+                    type: 'error',
+                    message: response.message
+                });
+            }
+
+            const responseData = await response.json();
+
+            setAlert({
+                open: true,
+                type: 'info',
+                message: responseData.message
+            });
+
+        } catch (error) {
+            setAlert({
+                open: true,
+                type: 'info',
+                message: error
+            });
+        }
     }
 
     return (
@@ -174,7 +293,7 @@ function Assignments() {
                         flexGrow: 1,
                         height: '100vh',
                         overflow: 'auto',
-                        pt: 8, // Adjust this padding to account for the header's height
+                        pt: 15, // Adjust this padding to account for the header's height
                         px: 3
                     }}
                 >
@@ -183,17 +302,23 @@ function Assignments() {
                             {alert.message}
                         </Alert>
                     )}
-                    <TableContainer component={Paper}
-                        sx={{
-                            // Adjust this value according to your header's height
-                        }}>
+                    <TableContainer component={Paper}>
                         <Table>
                             <TableHead>
                                 <TableRow>
                                     <TableCell sx={{ fontWeight: 'bold' }}>Заглавие</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>Създадено от</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>Създадено на</TableCell>
-                                    {/* Add more header cells here */}
+                                    {canOperateAssignments(user) && (
+                                        <TableCell sx={{ fontWeight: 'bold' }}
+                                        >
+                                        </TableCell>
+                                    )}
+                                    {canOperateAssignments(user) && (
+                                        <TableCell sx={{ fontWeight: 'bold' }}
+                                        >
+                                        </TableCell>
+                                    )}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -206,14 +331,29 @@ function Assignments() {
                                         <TableCell>{assignment.title}</TableCell>
                                         <TableCell>{assignment.user.firstName} {assignment.user.lastName}</TableCell>
                                         <TableCell>{timestampToDate(assignment.createAt)}</TableCell>
-                                        {/* Add more cells for other properties */}
+                                        {canOperateAssignments(user) && (
+                                            <TableCell>
+                                                <Button variant="contained" onClick={(e) => { e.stopPropagation(); handleEditClick(assignment.id) }}>Актуализация</Button>
+                                            </TableCell>
+                                        )}
+                                        {canOperateAssignments(user) && (
+                                            <TableCell>
+                                                <Button variant="contained" color="error" onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDeleteClick(assignment.id);
+                                                    handleRefresh();
+                                                }}>
+                                                    Изтрий
+                                                </Button>
+                                            </TableCell>
+                                        )}
                                     </TableRow>
                                 ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', mt: 2 }}>
-                        {canCreateAssignment(user) && (<Button
+                        {canOperateAssignments(user) && (<Button
                             variant="contained"
                             color="primary"
                             sx={{
@@ -226,7 +366,11 @@ function Assignments() {
                         )}
 
                         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md"> {/* This makes the dialog larger */}
-                            <DialogTitle>Създаване на ново задание</DialogTitle>
+                            {dialogType === 'create' ? (
+                                <DialogTitle>Създаване на задание</DialogTitle>
+                            ) : (
+                                <DialogTitle>Промяна на задание</DialogTitle>
+                            )}
                             <DialogContent>
                                 <TextField
                                     autoFocus
@@ -235,7 +379,7 @@ function Assignments() {
                                     label="Заглавие на заданието"
                                     type="text"
                                     fullWidth
-                                    value={title}
+                                    defaultValue={dialogType === 'create' ? title : editingAssignment.title}
                                     onChange={(e) => setTitle(e.target.value)}
                                 />
                                 <TextField
@@ -246,7 +390,7 @@ function Assignments() {
                                     fullWidth
                                     multiline
                                     rows={4}
-                                    value={description}
+                                    defaultValue={dialogType === 'create' ? description : editingAssignment.description}
                                     onChange={(e) => setDescription(e.target.value)}
                                 />
                                 {fileFields.map((file, index) => (
@@ -256,7 +400,8 @@ function Assignments() {
                                             id={`file-${index}`}
                                             label="Специален файл"
                                             type="text"
-                                            value={file.value || ''}
+                                            value={dialogType === 'create' ? file.value || '' : editingAssignment.specialFiles[index]}
+                                            //vallue = { file.value || ''}
                                             onChange={(e) => handleFileChange(e, index)}
                                         />
                                         <IconButton onClick={() => removeFileField(index)} style={{ marginLeft: '5px' }}>
@@ -276,9 +421,14 @@ function Assignments() {
                                 </Button>
                                 <Button onClick={() => {
                                     const data = gatherData();
-                                    handleSubmit(data);
+                                    if (dialogType === 'create') {
+                                        handleSubmit(data);
+                                    } else if (dialogType === 'update') {
+                                        handleUpdate(data);
+                                    }
+                                    handleRefresh();
                                 }} variant="contained" color="primary">
-                                    Създай
+                                    {dialogType === 'create' ? 'Създай' : 'Актуализация'}
                                 </Button>
                             </DialogActions>
                         </Dialog>

@@ -26,6 +26,11 @@ function AssignmentDetails() {
   const { id } = useParams();
   const [assignment, setAssignment] = useState({});
   const [submission, setSubmission] = useState({});
+  const [alert, setAlert] = useState({
+    open: false,
+    type: 'info',
+    message: ''
+  });
 
   useEffect(() => {
     fetch(`http://localhost:8080/api/v1/assignment/${id}`,
