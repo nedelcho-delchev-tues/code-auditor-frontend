@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -95,9 +96,11 @@ function stringAvatar(name) {
 const drawerWidth = 240;
 
 function DashboardDrawer() {
-
     const [anchorDropDown, setAnchorDropDown] = useState(null);
+    const [open, setOpen] = useState(true);
+    const [user, setUser] = useState([]);
     const openDropDown = Boolean(anchorDropDown);
+    const navigate = useNavigate();
 
     const handleClick = (event) => {
         setAnchorDropDown(event.currentTarget);
@@ -105,14 +108,16 @@ function DashboardDrawer() {
     const handleClose = () => {
         setAnchorDropDown(null);
     };
-    const [open, setOpen] = useState(true);
-
+    
+    const handleProfileClick= () => {
+        navigate("/user")
+    }
+    
     const toggleDrawer = () => {
         setOpen(!open);
     };
 
-    const [user, setUser] = useState([]);
-
+    
     useEffect(() => {
         const token = getCurrentUser();
         fetch(`http://localhost:8080/api/v1/user`, {
@@ -129,7 +134,6 @@ function DashboardDrawer() {
                 console.error('Error fetching user:', error);
             });
     }, []);
-
 
     return (
         <div>
@@ -187,8 +191,14 @@ function DashboardDrawer() {
                                     horizontal: 'left',
                                 }}
                             >
-                                <MenuItem onClick={handleClose}>Моят профил</MenuItem>
-                                <MenuItem onClick={(logout)}>Изход</MenuItem>
+                                <MenuItem 
+                                    onClick={(e) => {
+                                        handleProfileClick();
+                                        handleClose();
+                                    }}>
+                                    Моят профил 
+                                </MenuItem>
+                                <MenuItem onClick={logout}>Изход</MenuItem>
                             </Menu>
                         </Toolbar>
                     </AppBar>

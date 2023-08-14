@@ -8,6 +8,7 @@ import Assignments from './components/Assignments';
 import AssignmentDetails from './components/AssignmentDetails';
 import Submissions from './components/Submissions';
 import SubmissionDetails from './components/SubmissionDetails';
+import Profile from './components/Profile';
 
 
 function App() {
@@ -31,6 +32,9 @@ function App() {
           </Route>
           <Route path='/' element={<ProtectedRoute/>}>
             <Route  path='/submissions/:id' element={<SubmissionDetails/>}/>
+          </Route>
+          <Route path='/' element={<ProtectedRoute/>}>
+            <Route  path='/user' element={<Profile/>}/>
           </Route>
         <Route path="*" element={<p>There's nothing here: 404!</p>} />
       </Routes>

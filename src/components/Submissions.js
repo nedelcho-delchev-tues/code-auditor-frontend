@@ -26,13 +26,11 @@ const Submissions = () => {
     const token = getCurrentUser();
     const [user, setUser] = useState([])
     const [submissions, setSubmissions] = useState([]);
-    const [open, setOpen] = useState(false);
     const [alert, setAlert] = useState({
         open: false,
         type: 'info',
         message: ''
     });
-
 
     const canOperateSubmissions = (user, submissionUser) => {
         console.log(user, submissionUser);
