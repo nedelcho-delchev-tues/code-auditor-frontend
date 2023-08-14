@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard';
 import {ProtectedRoute} from './security/ProtectedRouter';
 import Assignments from './components/Assignments';
 import AssignmentDetails from './components/AssignmentDetails';
+import Submissions from './components/Submissions';
 
 
 function App() {
@@ -23,6 +24,9 @@ function App() {
           </Route>
           <Route path='/' element={<ProtectedRoute/>}>
             <Route  path='/assignment/:id' element={<AssignmentDetails/>}/>
+          </Route>
+          <Route path='/' element={<ProtectedRoute/>}>
+            <Route  path='/submissions' element={<Submissions/>}/>
           </Route>
         <Route path="*" element={<p>There's nothing here: 404!</p>} />
       </Routes>

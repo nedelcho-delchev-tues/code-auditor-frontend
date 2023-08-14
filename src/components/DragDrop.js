@@ -50,8 +50,6 @@ const DragDrop = () => {
         }
     }, [submission])
 
-
-
     const onDrop = (acceptedFiles, rejectedFiles) => {
         const validZipFiles = acceptedFiles.filter(file => file.type === 'application/zip');
         if (rejectedFiles.length > 0) {

@@ -3,17 +3,21 @@ import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import MuiDrawer from '@mui/material/Drawer';
-import { mainListItems } from './listItems';
+import { mainListItems } from './ListItems';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Avatar } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import { getCurrentUser } from '../services/authenticationService';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import { getCurrentUser } from '../services/authenticationService';
+import { logout } from '../services/authenticationService';
+
 
 const defaultTheme = createTheme();
 
@@ -91,6 +95,16 @@ function stringAvatar(name) {
 const drawerWidth = 240;
 
 function DashboardDrawer() {
+
+    const [anchorDropDown, setAnchorDropDown] = useState(null);
+    const openDropDown = Boolean(anchorDropDown);
+
+    const handleClick = (event) => {
+        setAnchorDropDown(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorDropDown(null);
+    };
     const [open, setOpen] = useState(true);
 
     const toggleDrawer = () => {
@@ -149,9 +163,33 @@ function DashboardDrawer() {
                             >
                                 Контролно Табло
                             </Typography>
-                            <IconButton>
+                            <IconButton
+                                id="icon-button"
+                                aria-controls={openDropDown ? 'icon-button' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={openDropDown ? 'true' : undefined}
+                                onClick={handleClick}
+                            >
                                 <Avatar {...stringAvatar(user.firstName + " " + user.lastName)} />
                             </IconButton>
+                            <Menu
+                                id="icon-button"
+                                aria-labelledby="icon-button"
+                                anchorEl={anchorDropDown}
+                                open={openDropDown}
+                                onClose={handleClose}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'left',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'left',
+                                }}
+                            >
+                                <MenuItem onClick={handleClose}>Моят профил</MenuItem>
+                                <MenuItem onClick={(logout)}>Изход</MenuItem>
+                            </Menu>
                         </Toolbar>
                     </AppBar>
                     <Drawer variant="permanent" open={open}>

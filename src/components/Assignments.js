@@ -39,7 +39,6 @@ const canOperateAssignments = (user) => {
     return true;
 };
 
-
 function Assignments() {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -58,16 +57,17 @@ function Assignments() {
     const token = getCurrentUser();
 
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const data = await userInfo();
-                setUser(data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        }
-        fetchData();
+        fetchUserData();
     }, []);
+
+    async function fetchUserData() {
+        try {
+            const data = await userInfo();
+            setUser(data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
 
     useEffect(() => {
         fetchAssignments();
@@ -75,20 +75,20 @@ function Assignments() {
 
     const fetchAssignments = () => {
         fetch('http://localhost:8080/api/v1/assignment',
-        {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            setAssignments(data);
-        })
-        .catch(error => {
-            console.error('Error fetching assignments:', error);
-        });
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                setAssignments(data);
+            })
+            .catch(error => {
+                console.error('Error fetching assignments:', error);
+            });
     }
 
     const handleRefresh = () => {
@@ -293,7 +293,7 @@ function Assignments() {
                         flexGrow: 1,
                         height: '100vh',
                         overflow: 'auto',
-                        pt: 15, // Adjust this padding to account for the header's height
+                        pt: 10, // Adjust this padding to account for the header's height
                         px: 3
                     }}
                 >

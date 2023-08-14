@@ -4,6 +4,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import { Link } from 'react-router-dom';
 
 export const mainListItems = (
@@ -19,6 +20,12 @@ export const mainListItems = (
         <AssignmentIcon />
       </ListItemIcon>
       <ListItemText primary="Задания" />
+    </ListItemButton>
+    <ListItemButton component={Link} to="/submissions">
+      <ListItemIcon>
+        <AssignmentTurnedInIcon />
+      </ListItemIcon>
+      <ListItemText primary="Предадени" />
     </ListItemButton>
   </React.Fragment>
 );
