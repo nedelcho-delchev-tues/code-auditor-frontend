@@ -87,7 +87,7 @@ export default function Register() {
                   required
                   fullWidth
                   id="lastName"
-                  label="Второ име"
+                  label="Фамилно име"
                   name="lastName"
                   autoComplete="family-name"
                 />

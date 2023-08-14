@@ -127,7 +127,7 @@ function Assignments() {
     const navigate = useNavigate();
 
     const handleRowClick = (id) => {
-        navigate(`/assignment/${id}`);
+        navigate(`/assignments/${id}`);
     };
 
     const [assignments, setAssignments] = useState([]);
@@ -322,7 +322,7 @@ function Assignments() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {assignments.map(assignment => (
+                                {[...assignments].reverse().map(assignment => (
                                     <TableRow
                                         key={assignment.id}
                                         onClick={() => handleRowClick(assignment.id)}

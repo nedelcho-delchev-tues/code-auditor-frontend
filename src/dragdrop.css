@@ -3,15 +3,20 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-  }
-  
-  .dropzone {
+    height: 150px; /* Adjust this value based on your desired height */
+}
+
+.dropzone {
     border: 2px dashed #cccccc;
     padding: 20px;
     text-align: center;
     cursor: pointer;
     transition: border-color 0.3s ease;
-  }
+    width: 100%; /* This will ensure the dropzone takes the full width of its container */
+    display: flex; 
+    align-items: center; /* This will center the text vertically */
+    justify-content: center; /* This will center the text horizontally */
+}
   
   .dropzone.active {
     border-color: #007bff;

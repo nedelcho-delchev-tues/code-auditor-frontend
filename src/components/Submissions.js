@@ -16,6 +16,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import DashboardDrawer from './DashboardDrawer';
 import { getCurrentUser } from '../services/authenticationService';
 import { userInfo } from '../services/userService';
+import Alert from '@mui/material/Alert';
 
 
 const defaultTheme = createTheme();
@@ -25,7 +26,14 @@ const Submissions = () => {
     const token = getCurrentUser();
     const [user, setUser] = useState([])
     const [submissions, setSubmissions] = useState([]);
-    
+    const [open, setOpen] = useState(false);
+    const [alert, setAlert] = useState({
+        open: false,
+        type: 'info',
+        message: ''
+    });
+
+
     const canOperateSubmissions = (user, submissionUser) => {
         console.log(user, submissionUser);
         if (user.role === 'ADMIN' || user.role === 'PROFESSOR') return true;
@@ -61,7 +69,7 @@ const Submissions = () => {
     useEffect(() => {
         fetchSubmissions();
     }, // eslint-disable-next-line 
-    []);
+        []);
 
     const fetchSubmissions = () => {
         fetch('http://localhost:8080/api/v1/submission',
@@ -80,44 +88,43 @@ const Submissions = () => {
                 console.error('Error fetching submissions:', error);
             });
     }
-    console.log(submissions)
-    console.log(user)
+
     const handleRowClick = (id) => {
-        navigate(`/assignment/${id}`);
+        navigate(`/submissions/${id}`);
     };
 
-    async function handleDeleteClick(submission) {
-        // try {
-        //     const response = await fetch(`http://localhost:8080/api/v1/assignment/${assignmentId}`, {
-        //         method: 'DELETE',
-        //         headers: {
-        //             'Authorization': `Bearer ${token}`
-        //         }
-        //     });
+    async function handleDeleteClick(submissionId) {
+        try {
+            const response = await fetch(`http://localhost:8080/api/v1/submission/${parseInt(submissionId)}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
-        //     if (!response.ok) {
-        //         setAlert({
-        //             open: true,
-        //             type: 'error',
-        //             message: response.message
-        //         });
-        //     }
+            if (!response.ok) {
+                setAlert({
+                    open: true,
+                    type: 'error',
+                    message: response.message
+                });
+            }
 
-        //     const responseData = await response.json();
+            const responseData = await response.json();
 
-        //     setAlert({
-        //         open: true,
-        //         type: 'info',
-        //         message: responseData.message
-        //     });
+            setAlert({
+                open: true,
+                type: 'info',
+                message: responseData.message
+            });
 
-        // } catch (error) {
-        //     setAlert({
-        //         open: true,
-        //         type: 'info',
-        //         message: error
-        //     });
-        // }
+        } catch (error) {
+            setAlert({
+                open: true,
+                type: 'info',
+                message: error
+            });
+        }
     }
 
     return (
@@ -139,6 +146,11 @@ const Submissions = () => {
                         px: 3
                     }}
                 >
+                    {alert.open && (
+                        <Alert severity={alert.type} onClose={() => setAlert(prev => ({ ...prev, open: false }))}>
+                            {alert.message}
+                        </Alert>
+                    )}
                     <TableContainer component={Paper}>
                         <Table>
                             <TableHead>
@@ -175,10 +187,14 @@ const Submissions = () => {
                                         }} />}</TableCell>
                                         {canOperateSubmissions(user, submission.userId) && (
                                             <TableCell>
-                                                <Button variant="contained" color="error" onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleDeleteClick(submission.id);
-                                                }}>
+                                                <Button
+                                                    variant="contained"
+                                                    color="error"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleDeleteClick(submission.id);
+                                                    }}
+                                                >
                                                     Изтрий
                                                 </Button>
                                             </TableCell>

@@ -7,6 +7,7 @@ import {ProtectedRoute} from './security/ProtectedRouter';
 import Assignments from './components/Assignments';
 import AssignmentDetails from './components/AssignmentDetails';
 import Submissions from './components/Submissions';
+import SubmissionDetails from './components/SubmissionDetails';
 
 
 function App() {
@@ -23,10 +24,13 @@ function App() {
             <Route  path='/assignments' element={<Assignments/>}/>
           </Route>
           <Route path='/' element={<ProtectedRoute/>}>
-            <Route  path='/assignment/:id' element={<AssignmentDetails/>}/>
+            <Route  path='/assignments/:id' element={<AssignmentDetails/>}/>
           </Route>
           <Route path='/' element={<ProtectedRoute/>}>
             <Route  path='/submissions' element={<Submissions/>}/>
+          </Route>
+          <Route path='/' element={<ProtectedRoute/>}>
+            <Route  path='/submissions/:id' element={<SubmissionDetails/>}/>
           </Route>
         <Route path="*" element={<p>There's nothing here: 404!</p>} />
       </Routes>
