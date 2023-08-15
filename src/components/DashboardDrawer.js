@@ -99,6 +99,7 @@ function DashboardDrawer() {
     const [anchorDropDown, setAnchorDropDown] = useState(null);
     const [open, setOpen] = useState(true);
     const [user, setUser] = useState([]);
+    const [jwtToken, setJwtToken] = useState({});
     const openDropDown = Boolean(anchorDropDown);
     const navigate = useNavigate();
 
@@ -108,25 +109,31 @@ function DashboardDrawer() {
     const handleClose = () => {
         setAnchorDropDown(null);
     };
-    
-    const handleProfileClick= () => {
+
+    const handleProfileClick = () => {
         navigate("/user")
     }
-    
+
     const toggleDrawer = () => {
         setOpen(!open);
     };
 
-    
+
     useEffect(() => {
         const token = getCurrentUser();
+        setJwtToken(token);
         fetch(`http://localhost:8080/api/v1/user`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-        }).then(response => response.json())
+        }).then(response => {
+            if (response.status === 401) {
+                navigate("/login")
+            }
+            return response.json();
+        })
             .then(data => {
                 setUser(data);
             })
@@ -134,7 +141,7 @@ function DashboardDrawer() {
                 console.error('Error fetching user:', error);
             });
     }, []);
-
+    console.log("dashboard" + jwtToken)
     return (
         <div>
             <ThemeProvider theme={defaultTheme}>
@@ -191,12 +198,12 @@ function DashboardDrawer() {
                                     horizontal: 'left',
                                 }}
                             >
-                                <MenuItem 
+                                <MenuItem
                                     onClick={(e) => {
                                         handleProfileClick();
                                         handleClose();
                                     }}>
-                                    Моят профил 
+                                    Моят профил
                                 </MenuItem>
                                 <MenuItem onClick={logout}>Изход</MenuItem>
                             </Menu>

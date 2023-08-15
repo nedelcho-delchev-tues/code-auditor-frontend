@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -24,6 +24,7 @@ const DragDrop = () => {
     const [zipFile, setZipFile] = useState(null);
     const [submission, setSubmission] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch(`http://localhost:8080/api/v1/assignment/${id}/get_submission`,
@@ -33,7 +34,12 @@ const DragDrop = () => {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (response.status === 401) {
+                    navigate("/login");
+                  }
+                  return response.json()
+                })
             .then(data => {
                 setSubmission(data);
             })

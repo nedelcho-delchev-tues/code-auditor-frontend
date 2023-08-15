@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +12,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { login } from '../services/authenticationService.js';
 import { useNavigate } from 'react-router-dom';
+import Alert from '@mui/material/Alert';
 
 function Copyright(props) {
   return (
@@ -30,6 +31,11 @@ const defaultTheme = createTheme();
 
 export default function Login() {
   const navigate = useNavigate()
+  const [alert, setAlert] = useState({
+    open: false,
+    type: 'info',
+    message: ''
+  });
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -40,6 +46,11 @@ export default function Login() {
       localStorage.setItem("token", token);
       navigate("/dashboard")
     } catch (error) {
+      setAlert({
+        open: true,
+        type: 'error',
+        message: error.message
+      });
       console.error('Login error:', error.message);
     }
   };
@@ -56,6 +67,11 @@ export default function Login() {
             alignItems: 'center',
           }}
         >
+          {alert.open && (
+            <Alert severity={alert.type} onClose={() => setAlert(prev => ({ ...prev, open: false }))}>
+              {alert.message}
+            </Alert>
+          )}
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>

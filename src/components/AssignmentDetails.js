@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import { getCurrentUser } from '../services/authenticationService';
@@ -12,6 +12,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import DragDrop from './DragDrop';
+import Alert from '@mui/material/Alert';
 import { timestampToDate } from '../utils/Utils';
 import { Card, CardContent } from '@mui/material';
 
@@ -19,7 +20,6 @@ import { Card, CardContent } from '@mui/material';
 const defaultTheme = createTheme();
 
 const token = getCurrentUser();
-
 function AssignmentDetails() {
   const { id } = useParams();
   const [assignment, setAssignment] = useState({});
@@ -28,6 +28,8 @@ function AssignmentDetails() {
     type: 'info',
     message: ''
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`http://localhost:8080/api/v1/assignment/${id}`,
@@ -38,7 +40,17 @@ function AssignmentDetails() {
           'Authorization': `Bearer ${token}`
         }
       })
-      .then(response => response.json())
+      .then(response => {
+        if (response.status === 401) {
+          setAlert({
+            open: true,
+            type: 'error',
+            message: response.message
+          });
+          navigate("/login")
+        }
+        return response.json()
+      })
       .then(data => {
         setAssignment(data);
       })
@@ -71,6 +83,11 @@ function AssignmentDetails() {
               paddingRight: '45px'
             }}
           >
+            {alert.open && (
+              <Alert severity={alert.type} onClose={() => setAlert(prev => ({ ...prev, open: false }))}>
+                {alert.message}
+              </Alert>
+            )}
             <Paper elevation={3} style={{ padding: '30px' }}>
               <Typography variant="h5" align="center">
                 {assignment.title}
@@ -110,11 +127,6 @@ function AssignmentDetails() {
       </Box>
     </ThemeProvider>
   );
-};
-
-const decodeBase64ToHTML = (base64String) => {
-  const decodedHTML = atob(base64String);
-  return decodedHTML;
 };
 
 export default AssignmentDetails;

@@ -13,6 +13,7 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import { Typography } from '@mui/material';
 import DashboardDrawer from './DashboardDrawer';
 import { getCurrentUser } from '../services/authenticationService';
 import { userInfo } from '../services/userService';
@@ -78,7 +79,12 @@ const Submissions = () => {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (response.status === 401) {
+                    navigate("/login");
+                }
+                return response.json()
+            })
             .then(data => {
                 setSubmissions(data);
             })
@@ -106,6 +112,10 @@ const Submissions = () => {
                     type: 'error',
                     message: response.message
                 });
+            }
+
+            if (response.status === 401) {
+                navigate("/login");
             }
 
             const responseData = await response.json();
@@ -149,6 +159,9 @@ const Submissions = () => {
                             {alert.message}
                         </Alert>
                     )}
+                    <Typography variant="h5" align="center" marginBottom={1}>
+                        Предадени решения
+                    </Typography>
                     <TableContainer component={Paper}>
                         <Table>
                             <TableHead>

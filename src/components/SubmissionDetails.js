@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import { getCurrentUser } from '../services/authenticationService';
@@ -20,6 +20,9 @@ function SubmissionDetails() {
     const [assignment, setAssignment] = useState({});
     const [submission, setSubmission] = useState({});
 
+    const navigate = useNavigate();
+
+
     useEffect(() => {
         fetch(`http://localhost:8080/api/v1/submission/${parseInt(id)}`,
             {
@@ -29,7 +32,12 @@ function SubmissionDetails() {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (response.status === 401) {
+                    navigate("/login")
+                }
+                return response.json()
+            })
             .then(data => {
                 setSubmission(data);
             })
@@ -40,7 +48,7 @@ function SubmissionDetails() {
 
     useEffect(() => {
         if (!submission.assignmentId) return;  // guard clause
-    
+
         fetch(`http://localhost:8080/api/v1/assignment/${submission.assignmentId}`, {
             method: 'GET',
             headers: {
@@ -48,13 +56,13 @@ function SubmissionDetails() {
                 'Authorization': `Bearer ${token}`
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            setAssignment(data);
-        })
-        .catch(error => {
-            console.error('Error fetching assignment:', error);
-        });
+            .then(response => response.json())
+            .then(data => {
+                setAssignment(data);
+            })
+            .catch(error => {
+                console.error('Error fetching assignment:', error);
+            });
     }, [submission.assignmentId]);
 
     console.log(assignment)

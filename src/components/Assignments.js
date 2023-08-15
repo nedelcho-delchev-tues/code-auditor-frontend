@@ -20,6 +20,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import Alert from '@mui/material/Alert';
+import { Typography } from '@mui/material';
 import { getCurrentUser } from '../services/authenticationService';
 import { userInfo } from '../services/userService';
 import { timestampToDate } from '../utils/Utils';
@@ -82,7 +83,12 @@ function Assignments() {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (response.status === 401) {
+                    navigate("/login")
+                }
+                return response.json();
+            })
             .then(data => {
                 setAssignments(data);
             })
@@ -302,6 +308,9 @@ function Assignments() {
                             {alert.message}
                         </Alert>
                     )}
+                    <Typography variant="h5" align="center" marginBottom={1}>
+                        Задания
+                    </Typography>
                     <TableContainer component={Paper}>
                         <Table>
                             <TableHead>
