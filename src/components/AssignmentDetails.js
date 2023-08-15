@@ -40,17 +40,9 @@ function AssignmentDetails() {
           'Authorization': `Bearer ${token}`
         }
       })
-      .then(response => {
-        if (response.status === 401) {
-          setAlert({
-            open: true,
-            type: 'error',
-            message: response.message
-          });
-          navigate("/login")
-        }
-        return response.json()
-      })
+      .then(response => 
+         response.json()
+      )
       .then(data => {
         setAssignment(data);
       })
@@ -58,6 +50,12 @@ function AssignmentDetails() {
         console.error('Error fetching assignments:', error);
       });
   }, [id]);
+
+  const createdAt = new Date(assignment.createdAt);
+  const modifiedAt = new Date(assignment.modifiedAt);
+
+  const formattedCreatedAt = `${createdAt.toLocaleDateString()} ${createdAt.toLocaleTimeString()}`;
+  const formattedModifiedAt = `${modifiedAt.toLocaleDateString()} ${modifiedAt.toLocaleTimeString()}`;
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -119,8 +117,8 @@ function AssignmentDetails() {
               <DragDrop />
             </Paper>
             <Box display="flex" justifyContent="space-between">
-              <Typography>Създадено на: {timestampToDate(assignment.createdAt)}</Typography>
-              <Typography>Редактирано на: {timestampToDate(assignment.modifiedAt)}</Typography>
+              <Typography>Създадено на: {formattedCreatedAt} </Typography>
+              <Typography>Редактирано на: {formattedModifiedAt}</Typography>
             </Box>
           </Box>
         </Box>

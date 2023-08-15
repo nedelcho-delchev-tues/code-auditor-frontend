@@ -34,7 +34,6 @@ const Submissions = () => {
     });
 
     const canOperateSubmissions = (user, submissionUser) => {
-        console.log(user, submissionUser);
         if (user.role === 'ADMIN' || user.role === 'PROFESSOR') return true;
 
         if (user.id === submissionUser) return true;

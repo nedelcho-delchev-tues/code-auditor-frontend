@@ -141,7 +141,7 @@ function DashboardDrawer() {
                 console.error('Error fetching user:', error);
             });
     }, []);
-    console.log("dashboard" + jwtToken)
+
     return (
         <div>
             <ThemeProvider theme={defaultTheme}>
