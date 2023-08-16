@@ -3,12 +3,15 @@ import React from 'react';
 import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
-import {ProtectedRoute} from './security/ProtectedRouter';
+import {ProtectedRoute} from './security/ProtectedRoute';
 import Assignments from './components/Assignments';
 import AssignmentDetails from './components/AssignmentDetails';
 import Submissions from './components/Submissions';
 import SubmissionDetails from './components/SubmissionDetails';
+import Users from './components/Users';
 import Profile from './components/Profile';
+import { AdminRoute } from './security/AdminRoute';
+import NotFoundPage from './components/NotFound';
 
 
 function App() {
@@ -34,9 +37,13 @@ function App() {
             <Route  path='/submissions/:id' element={<SubmissionDetails/>}/>
           </Route>
           <Route path='/' element={<ProtectedRoute/>}>
-            <Route  path='/user' element={<Profile/>}/>
+            <Route  path='/profile' element={<Profile/>}/>
           </Route>
-        <Route path="*" element={<p>There's nothing here: 404!</p>} />
+          {/* fix admin router below */}
+          <Route path='/' element={<ProtectedRoute/>}> 
+            <Route  path='/users' element={<Users/>}/>
+          </Route>
+        <Route path="*" element={<NotFoundPage/>} />
       </Routes>
     </Router>
   );

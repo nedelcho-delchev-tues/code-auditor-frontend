@@ -11,11 +11,16 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Paper, Divider, TextField, Button } from '@mui/material';
 import { Card, CardContent } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import { userInfo } from '../services/userService';
+import { userInfo, assembleUserName } from '../services/userService';
 
 const defaultTheme = createTheme();
 
 const token = getCurrentUser();
+
+const decodeBase64ToHTML = (base64String) => {
+    const decodedHTML = atob(base64String);
+    return decodedHTML;
+};
 
 function SubmissionDetails() {
     const { id } = useParams();
@@ -28,7 +33,7 @@ function SubmissionDetails() {
     const [currentPage, setCurrentPage] = useState(1);
     const [feedbacksPerPage, setFeedbacksPerPage] = useState(5);
 
-    const sortedFeedbacks = [...feedbacks].sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
+    const sortedFeedbacks = [...feedbacks].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     const indexOfLastFeedback = currentPage * feedbacksPerPage;
     const indexOfFirstFeedback = indexOfLastFeedback - feedbacksPerPage;
@@ -128,7 +133,7 @@ function SubmissionDetails() {
                 {
                     "studentSubmissionId": parseInt(id),
                     "comment": newFeedback,
-                    "commenter": assembleCommentarName(user)
+                    "commenter": assembleUserName(user)
                 }
             )
         }).then(response => {
@@ -145,13 +150,6 @@ function SubmissionDetails() {
         setNewFeedback('');
     };
 
-    const assembleCommentarName = (user) => {
-        if (user.title !== null) {
-            return user.title + " " + user.firstName + " " + user.lastName;
-        }
-        return user.firstName + " " + user.lastName;
-    }
-
     const formattedDate = (date) => {
         const createdAt = new Date(date);
         return `${createdAt.toLocaleDateString()} ${createdAt.toLocaleTimeString()}`;
@@ -160,7 +158,7 @@ function SubmissionDetails() {
     console.log("ASSIGNEMNT " + assignment)
     console.log("SUBMISSION " + JSON.stringify(submission))
     console.log("feedbacks" + JSON.stringify(feedbacks))
-    console.log("user:", assembleCommentarName(user));
+    console.log("user:", assembleUserName(user));
     return (
         <ThemeProvider theme={defaultTheme}>
             <Box sx={{ display: 'flex' }}>
@@ -240,7 +238,7 @@ function SubmissionDetails() {
                                             {feedback.commenter}
                                         </Typography>
                                         <Typography variant="caption" color={grey[600]} sx={{ marginLeft: 1 }}>
-                                            {formattedDate(feedback.createdTime)}
+                                            {formattedDate(feedback.createdAt)}
                                         </Typography>
                                     </Box>
                                     <Typography variant="body1" sx={{ marginTop: 1 }}>
@@ -263,7 +261,7 @@ function SubmissionDetails() {
                                 onClick={handleFeedbackSubmit}
                                 disabled={!newFeedback.trim()}
                             >
-                                Submit
+                                Изпращане
                             </Button>
                             <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 2 }}>
                                 <Button
@@ -272,11 +270,11 @@ function SubmissionDetails() {
                                     onClick={() => setCurrentPage(currentPage - 1)}
                                     disabled={currentPage === 1}
                                 >
-                                    Previous
+                                    Предишна
                                 </Button>
 
                                 <Typography variant="body1" sx={{ flexGrow: 1, textAlign: 'center' }}>
-                                    Page {currentPage} of {Math.ceil(feedbacks.length / feedbacksPerPage)}
+                                Страница {feedbacks.length > 0 ? currentPage : 1} от {Math.ceil(feedbacks.length / feedbacksPerPage)}
                                 </Typography>
 
                                 <Button
@@ -285,7 +283,7 @@ function SubmissionDetails() {
                                     onClick={() => setCurrentPage(currentPage + 1)}
                                     disabled={currentPage === Math.ceil(feedbacks.length / feedbacksPerPage)}
                                 >
-                                    Next
+                                    Следваща
                                 </Button>
                             </Box>
                         </Paper>
@@ -295,10 +293,5 @@ function SubmissionDetails() {
         </ThemeProvider>
     )
 }
-
-const decodeBase64ToHTML = (base64String) => {
-    const decodedHTML = atob(base64String);
-    return decodedHTML;
-};
 
 export default SubmissionDetails;

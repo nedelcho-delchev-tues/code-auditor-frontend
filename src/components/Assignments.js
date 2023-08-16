@@ -53,7 +53,6 @@ function Assignments() {
     });
     const [editingAssignment, setEditingAssignment] = useState(null);
     const [dialogType, setDialogType] = useState('create');
-    const [refreshKey, setRefreshKey] = useState(0);
 
     const token = getCurrentUser();
 
@@ -95,11 +94,6 @@ function Assignments() {
             .catch(error => {
                 console.error('Error fetching assignments:', error);
             });
-    }
-
-    const handleRefresh = () => {
-        fetchAssignments();
-        setRefreshKey(prevKey => prevKey + 1);
     }
 
     const handleOpen = () => {
@@ -144,7 +138,7 @@ function Assignments() {
             description,
             specialFiles: fileFields.map(file => file.value)
         };
-        // Assign this data to whatever variable or do whatever operation you want with it.
+
         return data;
     };
 
@@ -299,7 +293,7 @@ function Assignments() {
                         flexGrow: 1,
                         height: '100vh',
                         overflow: 'auto',
-                        pt: 10, // Adjust this padding to account for the header's height
+                        pt: 10,
                         px: 3
                     }}
                 >
@@ -342,7 +336,12 @@ function Assignments() {
                                         <TableCell>{timestampToDate(assignment.createAt)}</TableCell>
                                         {canOperateAssignments(user) && (
                                             <TableCell>
-                                                <Button variant="contained" onClick={(e) => { e.stopPropagation(); handleEditClick(assignment.id) }}>Актуализация</Button>
+                                                <Button variant="contained" onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleEditClick(assignment.id)
+                                                }}>
+                                                    Актуализация
+                                                </Button>
                                             </TableCell>
                                         )}
                                         {canOperateAssignments(user) && (
@@ -350,7 +349,6 @@ function Assignments() {
                                                 <Button variant="contained" color="error" onClick={(e) => {
                                                     e.stopPropagation();
                                                     handleDeleteClick(assignment.id);
-                                                    handleRefresh();
                                                 }}>
                                                     Изтрий
                                                 </Button>
@@ -435,7 +433,6 @@ function Assignments() {
                                     } else if (dialogType === 'update') {
                                         handleUpdate(data);
                                     }
-                                    handleRefresh();
                                 }} variant="contained" color="primary">
                                     {dialogType === 'create' ? 'Създай' : 'Актуализация'}
                                 </Button>

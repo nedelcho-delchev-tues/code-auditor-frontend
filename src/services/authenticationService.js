@@ -30,7 +30,7 @@ export async function logout() {
   });
 
   if (response.ok) {
-    localStorage.removeItem("token");
+    localStorage.clear();
     promptToRelogin();
   } else {
     throw new Error('Проблем при опита за излизане от системата.');

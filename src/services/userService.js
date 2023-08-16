@@ -19,3 +19,10 @@ export async function userInfo() {
         throw new Error('Проблем при взимане на потребител.');
     }
 }
+
+export const assembleUserName = (user) => {
+    if (user.title !== null) {
+        return user.title + " " + user.firstName + " " + user.lastName;
+    }
+    return user.firstName + " " + user.lastName;
+}

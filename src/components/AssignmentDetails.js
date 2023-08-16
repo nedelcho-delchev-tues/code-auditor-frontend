@@ -72,7 +72,7 @@ function AssignmentDetails() {
             flexGrow: 1,
             height: '100vh',
             overflow: 'auto',
-            pt: 10, // Adjust this padding to account for the header's height
+            pt: 10,
             px: 3
           }}
         >

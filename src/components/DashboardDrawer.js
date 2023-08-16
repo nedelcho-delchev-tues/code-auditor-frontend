@@ -111,7 +111,7 @@ function DashboardDrawer() {
     };
 
     const handleProfileClick = () => {
-        navigate("/user")
+        navigate("/profile")
     }
 
     const toggleDrawer = () => {
@@ -224,7 +224,7 @@ function DashboardDrawer() {
                         </Toolbar>
                         <Divider />
                         <List component="nav">
-                            {mainListItems}
+                            {mainListItems(user)}
                         </List>
                     </Drawer>
                     <Box
