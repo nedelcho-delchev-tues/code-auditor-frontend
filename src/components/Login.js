@@ -46,11 +46,19 @@ export default function Login() {
       localStorage.setItem("token", token);
       navigate("/dashboard")
     } catch (error) {
-      setAlert({
-        open: true,
-        type: 'error',
-        message: error.message
-      });
+      if (error.message === 'Failed to fetch') {
+        setAlert({
+          open: true,
+          type: 'error',
+          message: 'Няма връзка към сървъра. Моля проверете свързаността си с интернет и опитайте отново'
+        });
+      } else {
+        setAlert({
+          open: true,
+          type: 'error',
+          message: error.message
+        });
+      }
       console.error('Login error:', error.message);
     }
   };

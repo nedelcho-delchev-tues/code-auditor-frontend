@@ -340,7 +340,7 @@ function Assignments() {
                                                     e.stopPropagation();
                                                     handleEditClick(assignment.id)
                                                 }}>
-                                                    Актуализация
+                                                    Промяна
                                                 </Button>
                                             </TableCell>
                                         )}
@@ -408,7 +408,6 @@ function Assignments() {
                                             label="Специален файл"
                                             type="text"
                                             value={dialogType === 'create' ? file.value || '' : editingAssignment.specialFiles[index]}
-                                            //vallue = { file.value || ''}
                                             onChange={(e) => handleFileChange(e, index)}
                                         />
                                         <IconButton onClick={() => removeFileField(index)} style={{ marginLeft: '5px' }}>
@@ -434,7 +433,7 @@ function Assignments() {
                                         handleUpdate(data);
                                     }
                                 }} variant="contained" color="primary">
-                                    {dialogType === 'create' ? 'Създай' : 'Актуализация'}
+                                    {dialogType === 'create' ? 'Създай' : 'Промяна'}
                                 </Button>
                             </DialogActions>
                         </Dialog>

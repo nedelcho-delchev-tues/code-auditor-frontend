@@ -26,3 +26,11 @@ export const assembleUserName = (user) => {
     }
     return user.firstName + " " + user.lastName;
 }
+
+export function isAdmin(user) {
+    return user && user.role === 'ADMIN';
+}
+
+export function isProfessor(user) {
+    return user && user.role === 'PROFESSOR';
+}

@@ -155,10 +155,6 @@ function SubmissionDetails() {
         return `${createdAt.toLocaleDateString()} ${createdAt.toLocaleTimeString()}`;
     }
 
-    console.log("ASSIGNEMNT " + assignment)
-    console.log("SUBMISSION " + JSON.stringify(submission))
-    console.log("feedbacks" + JSON.stringify(feedbacks))
-    console.log("user:", assembleUserName(user));
     return (
         <ThemeProvider theme={defaultTheme}>
             <Box sx={{ display: 'flex' }}>
@@ -274,7 +270,7 @@ function SubmissionDetails() {
                                 </Button>
 
                                 <Typography variant="body1" sx={{ flexGrow: 1, textAlign: 'center' }}>
-                                Страница {feedbacks.length > 0 ? currentPage : 1} от {Math.ceil(feedbacks.length / feedbacksPerPage)}
+                                Страница {feedbacks.length > 0 ? currentPage : 0} от {Math.ceil(feedbacks.length / feedbacksPerPage)}
                                 </Typography>
 
                                 <Button

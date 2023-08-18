@@ -77,11 +77,11 @@ function Dashboard() {
           <br />
 
           {/* Upcoming Deadlines Section */}
-          <Paper elevation={3} sx={{ padding: '20px', borderRadius: '15px', marginTop: '20px' }}>
+          {/* <Paper elevation={3} sx={{ padding: '20px', borderRadius: '15px', marginTop: '20px' }}>
             <Typography variant="h5" gutterBottom>
               Upcoming Deadlines
             </Typography>
-          </Paper>
+          </Paper> */}
 
         </Box>
       </Box>

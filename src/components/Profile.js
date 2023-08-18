@@ -24,8 +24,6 @@ function Profile() {
         }
     }
 
-    console.log(user)
-
     return (
         <ThemeProvider theme={defaultTheme}>
             <Box sx={{ display: 'flex' }}>
@@ -47,36 +45,36 @@ function Profile() {
                 >
                     <Paper elevation={3} sx={{ padding: 4 }}>
                         <Typography variant="h4" gutterBottom sx={{ marginBottom: 4 }}>
-                            Profile Information
+                            Профил
                         </Typography>
 
                         <Divider sx={{ my: 4 }} />
 
                         <Grid container spacing={5}>
                             <Grid item xs={6}>
-                                <Typography variant="h6" sx={{ marginBottom: 3 }}>First Name</Typography>
+                                <Typography variant="h6" sx={{ marginBottom: 3 }}>Първо име</Typography>
                                 <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.firstName}</Typography>
 
-                                <Typography variant="h6" sx={{ marginBottom: 3 }}>Email</Typography>
+                                <Typography variant="h6" sx={{ marginBottom: 3 }}>Мейл</Typography>
                                 <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.email}</Typography>
 
-                                <Typography variant="h6" sx={{ marginBottom: 3 }}>Faculty Number</Typography>
+                                <Typography variant="h6" sx={{ marginBottom: 3 }}>Факултетен номер</Typography>
                                 <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.facultyNumber}</Typography>
 
-                                <Typography variant="h6" sx={{ marginBottom: 3 }}>Group</Typography>
+                                <Typography variant="h6" sx={{ marginBottom: 3 }}>Група</Typography>
                                 <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.group}</Typography>
                             </Grid>
                             <Grid item xs={6}>
-                                <Typography variant="h6" sx={{ marginBottom: 3 }}>Last Name</Typography>
+                                <Typography variant="h6" sx={{ marginBottom: 3 }}>Фамилно име</Typography>
                                 <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.lastName}</Typography>
 
-                                <Typography variant="h6" sx={{ marginBottom: 3 }}>Faculty</Typography>
+                                <Typography variant="h6" sx={{ marginBottom: 3 }}>Факултет</Typography>
                                 <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.faculty}</Typography>
 
-                                <Typography variant="h6" sx={{ marginBottom: 3 }}>Specialization</Typography>
+                                <Typography variant="h6" sx={{ marginBottom: 3 }}>Специалност</Typography>
                                 <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.specialization}</Typography>
 
-                                <Typography variant="h6" sx={{ marginBottom: 3 }}>Stream</Typography>
+                                <Typography variant="h6" sx={{ marginBottom: 3 }}>Поток</Typography>
                                 <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.stream}</Typography>
                             </Grid>
                         </Grid>

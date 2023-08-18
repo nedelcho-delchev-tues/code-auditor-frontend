@@ -12,6 +12,7 @@ import Users from './components/Users';
 import Profile from './components/Profile';
 import { AdminRoute } from './security/AdminRoute';
 import NotFoundPage from './components/NotFound';
+import UserDetails from './components/UserDetails';
 
 
 function App() {
@@ -23,24 +24,15 @@ function App() {
         <Route path='/register' element={<Register />} />
         <Route path='/' element={<ProtectedRoute/>}>
             <Route  path='/dashboard' element={<Dashboard/>}/>
-          </Route>
-          <Route path='/' element={<ProtectedRoute/>}>
             <Route  path='/assignments' element={<Assignments/>}/>
-          </Route>
-          <Route path='/' element={<ProtectedRoute/>}>
             <Route  path='/assignments/:id' element={<AssignmentDetails/>}/>
-          </Route>
-          <Route path='/' element={<ProtectedRoute/>}>
             <Route  path='/submissions' element={<Submissions/>}/>
-          </Route>
-          <Route path='/' element={<ProtectedRoute/>}>
             <Route  path='/submissions/:id' element={<SubmissionDetails/>}/>
-          </Route>
-          <Route path='/' element={<ProtectedRoute/>}>
             <Route  path='/profile' element={<Profile/>}/>
           </Route>
           {/* fix admin router below */}
-          <Route path='/' element={<ProtectedRoute/>}> 
+          <Route path='/' element={<ProtectedRoute/>}>
+            <Route  path='/users/:id' element={<UserDetails/>}/>
             <Route  path='/users' element={<Users/>}/>
           </Route>
         <Route path="*" element={<NotFoundPage/>} />

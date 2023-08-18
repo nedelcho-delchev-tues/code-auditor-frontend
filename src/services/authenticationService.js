@@ -15,6 +15,9 @@ export async function login(email, password) {
     const data = await response.json();
     return data.access_token;
   } else {
+    if(response.status === 403){
+      throw new Error("Нямате достъп до системата. Моля свържете се с администратор при проблем.");
+    }
     throw new Error("Проблем при опита за вход в системата ");
   }
 }
@@ -71,7 +74,7 @@ export const isAuthenticated = () => {
     }
   }
 
-  return false; // Token is not valid or expired
+  return false;
 };
 
 export const promptToRelogin = () => {
