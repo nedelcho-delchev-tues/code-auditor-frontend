@@ -6,13 +6,17 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { Typography, Grid, Paper } from "@mui/material";
 import { assembleUserName } from "../services/userService";
 import { userInfo } from "../services/userService";
+import { useNavigate } from "react-router-dom";
 
 
 const defaultTheme = createTheme();
 
 function Dashboard() {
+  const navigate = useNavigate();
   const [user, setUser] = useState([])
   const [isFirstLogin, setIsFirstLogin] = useState(false);
+  const [submissionCount, setSubmissionCount] = useState(0);
+  const [assignmentCount, setAssignmentCount] = useState(0);
 
   useEffect(() => {
     if (localStorage.getItem('firstLogin') === null) {
@@ -21,6 +25,7 @@ function Dashboard() {
       localStorage.setItem('firstLogin', 'false');
     }
   }, []);
+
   useEffect(() => {
     fetchUserData();
   }, []);
@@ -32,6 +37,51 @@ function Dashboard() {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+  }
+
+  useEffect(() => {
+    fetchSubmissionCount();
+    fetchAssignmentCount();
+  }, []);
+
+  const fetchSubmissionCount = () => {
+    fetch('http://localhost:8080/api/v1/user/count_submissions',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        setSubmissionCount(data);
+      })
+      .catch(error => {
+        console.error('Error fetching submissionCount:', error);
+      });
+  }
+
+  const fetchAssignmentCount = () => {
+    fetch('http://localhost:8080/api/v1/assignment/count_assignments',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        setAssignmentCount(data);
+      })
+      .catch(error => {
+        console.error('Error fetching submissionCount:', error);
+      });
   }
 
   return (
@@ -63,11 +113,40 @@ function Dashboard() {
 
           <Grid container spacing={3} sx={{ marginTop: '20px' }}>
             <Grid item xs={12} sm={6} md={3}>
-              <Paper elevation={3} sx={{ padding: '20px', borderRadius: '15px' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Paper elevation={3} sx={{
+                padding: '20px',
+                borderRadius: '15px',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s, transform 0.3s',
+                '&:hover': {
+                  backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                  transform: 'scale(1.02)'
+                }
+              }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }} onClick={() => { navigate('/submissions') }}>
                   <Box sx={{ flexGrow: 1 }}>
-                    <Typography variant="h6">Completed Assignments</Typography>
-                    <Typography variant="h2" sx={{ color: '#4caf50' }}>56</Typography>
+                    <Typography variant="h6">Предадени задачи</Typography>
+                    <Typography variant="h2" sx={{ color: '#4caf50' }}>{submissionCount}</Typography>
+                  </Box>
+                </Box>
+              </Paper>
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={3}>
+              <Paper elevation={3} sx={{
+                padding: '20px',
+                borderRadius: '15px',
+                cursor: 'pointer',
+                transition: 'background-color 0.3s, transform 0.3s',
+                '&:hover': {
+                  backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                  transform: 'scale(1.02)'
+                }
+              }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }} onClick={() => { navigate('/assignments') }}>
+                  <Box sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6">Текущи задания</Typography>
+                    <Typography variant="h2" sx={{ color: '#4caf50' }}>{assignmentCount}</Typography>
                   </Box>
                 </Box>
               </Paper>

@@ -13,7 +13,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import DragDrop from './DragDrop';
 import Alert from '@mui/material/Alert';
-import { timestampToDate } from '../utils/Utils';
 import { Card, CardContent } from '@mui/material';
 
 
@@ -28,8 +27,6 @@ function AssignmentDetails() {
     type: 'info',
     message: ''
   });
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`http://localhost:8080/api/v1/assignment/${id}`,
@@ -91,7 +88,7 @@ function AssignmentDetails() {
                 {assignment.title}
               </Typography>
               <Divider style={{ margin: '16px 0' }} />
-              <Typography variant="h5" align="center">
+              <Typography variant="h5" align="left">
                 {assignment.description}
               </Typography>
               <Divider style={{ margin: '16px 0' }} />

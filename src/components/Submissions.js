@@ -181,7 +181,13 @@ const Submissions = () => {
                                     <TableRow
                                         key={submission.id}
                                         onClick={() => handleRowClick(submission.id)}
-                                        style={{ cursor: 'pointer' }}
+                                        sx={{
+                                            cursor: 'pointer',
+                                            transition: 'background-color 0.3s, transform 0.3s',
+                                            '&:hover': {
+                                                backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                                            }
+                                        }}
                                     >
                                         <TableCell>{submission.userId}</TableCell>
                                         <TableCell>{submission.assignmentId}</TableCell>

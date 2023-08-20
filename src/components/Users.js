@@ -197,7 +197,13 @@ function Users() {
                                     <TableRow
                                         key={user.id}
                                         onClick={() => handleRowClick(user.id)}
-                                        style={{ cursor: 'pointer' }}
+                                        sx={{
+                                            cursor: 'pointer',
+                                            transition: 'background-color 0.3s, transform 0.3s',
+                                            '&:hover': {
+                                                backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                                            }
+                                        }}
                                     >
                                         <TableCell>{assembleUserName(user)}</TableCell>
                                         <TableCell>{user.email}</TableCell>

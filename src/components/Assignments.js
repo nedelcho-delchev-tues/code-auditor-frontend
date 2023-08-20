@@ -331,7 +331,13 @@ function Assignments() {
                                     <TableRow
                                         key={assignment.id}
                                         onClick={() => handleRowClick(assignment.id)}
-                                        style={{ cursor: 'pointer' }}
+                                        sx={{
+                                            cursor: 'pointer',
+                                            transition: 'background-color 0.3s, transform 0.3s',
+                                            '&:hover': {
+                                                backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                                            }
+                                        }}
                                     >
                                         <TableCell>{assignment.title}</TableCell>
                                         <TableCell>{assignment.user.firstName} {assignment.user.lastName}</TableCell>

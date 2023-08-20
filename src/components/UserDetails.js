@@ -107,7 +107,7 @@ function UserDetails() {
                 body: JSON.stringify(data)
             });
             const responseData = await response.json();
-            
+
             setAlert({
                 openAlert: true,
                 type: 'info',
@@ -247,59 +247,74 @@ function UserDetails() {
                         {user && (isAdmin(user) || isProfessor(user)) ? (
                             <Grid container spacing={5}>
                                 <Grid item xs={6}>
-                                    <Typography variant="h6" sx={{ marginBottom: 3 }}>Първо име</Typography>
-                                    <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.firstName}</Typography>
+                                    <Typography variant="h6">Първо име</Typography>
+                                    <Typography gutterBottom>{user.firstName}</Typography>
+                                    <Divider sx={{ marginY: 2 }} />
 
-                                    <Typography variant="h6" sx={{ marginBottom: 3 }}>Титлa</Typography>
-                                    <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.title}</Typography>
+                                    <Typography variant="h6">Титлa</Typography>
+                                    <Typography gutterBottom>{user.title}</Typography>
+                                    <Divider sx={{ marginY: 2 }} />
 
-                                    <Typography variant="h6" sx={{ marginBottom: 3 }}>Активен ли е потребителя?</Typography>
-                                    <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.enabled ? "Активен" : "Неактивен"}</Typography>
+                                    <Typography variant="h6">Активен ли е потребителя?</Typography>
+                                    <Typography gutterBottom>{user.enabled ? "Активен" : "Неактивен"}</Typography>
+                                    <Divider sx={{ marginY: 2 }} />
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Typography variant="h6" sx={{ marginBottom: 3 }}>Фамилно име</Typography>
-                                    <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.lastName}</Typography>
+                                    <Typography variant="h6" >Фамилно име</Typography>
+                                    <Typography gutterBottom>{user.lastName}</Typography>
+                                    <Divider sx={{ marginY: 2 }} />
 
-                                    <Typography variant="h6" sx={{ marginBottom: 3 }}>Мейл</Typography>
-                                    <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.email}</Typography>
+                                    <Typography variant="h6">Мейл</Typography>
+                                    <Typography gutterBottom>{user.email}</Typography>
+                                    <Divider sx={{ marginY: 2 }} />
 
-                                    <Typography variant="h6" sx={{ marginBottom: 3 }}>Роля</Typography>
-                                    <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.role}</Typography>
+                                    <Typography variant="h6">Роля</Typography>
+                                    <Typography gutterBottom>{user.role}</Typography>
+                                    <Divider sx={{ marginY: 2 }} />
                                 </Grid>
                             </Grid>
                         ) : (
-                            <Grid container spacing={5}>
+                            <Grid container spacing={4}>
                                 <Grid item xs={6}>
-                                    <Typography variant="h6" sx={{ marginBottom: 3 }}>Първо име</Typography>
-                                    <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.firstName}</Typography>
+                                    <Typography variant="h6">Първо име</Typography>
+                                    <Typography gutterBottom>{user.firstName}</Typography>
+                                    <Divider sx={{ marginY: 2 }} />
 
-                                    <Typography variant="h6" sx={{ marginBottom: 3 }}>Мейл</Typography>
-                                    <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.email}</Typography>
+                                    <Typography variant="h6">Мейл</Typography>
+                                    <Typography gutterBottom>{user.email}</Typography>
+                                    <Divider sx={{ marginY: 2 }} />
 
-                                    <Typography variant="h6" sx={{ marginBottom: 3 }}>Факултетен номер</Typography>
-                                    <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.facultyNumber}</Typography>
+                                    <Typography variant="h6">Факултетен номер</Typography>
+                                    <Typography gutterBottom>{user.facultyNumber}</Typography>
+                                    <Divider sx={{ marginY: 2 }} />
 
-                                    <Typography variant="h6" sx={{ marginBottom: 3 }}>Група</Typography>
-                                    <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.group}</Typography>
+                                    <Typography variant="h6">Група</Typography>
+                                    <Typography gutterBottom>{user.group}</Typography>
+                                    <Divider sx={{ marginY: 2 }} />
 
-                                    <Typography variant="h6" sx={{ marginBottom: 3 }}>Роля</Typography>
-                                    <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.role}</Typography>
+                                    <Typography variant="h6">Роля</Typography>
+                                    <Typography gutterBottom>{user.role}</Typography>
                                 </Grid>
+
                                 <Grid item xs={6}>
-                                    <Typography variant="h6" sx={{ marginBottom: 3 }}>Фамилно име</Typography>
-                                    <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.lastName}</Typography>
+                                    <Typography variant="h6">Фамилно име</Typography>
+                                    <Typography gutterBottom>{user.lastName}</Typography>
+                                    <Divider sx={{ marginY: 2 }} />
 
-                                    <Typography variant="h6" sx={{ marginBottom: 3 }}>Факултет</Typography>
-                                    <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.faculty}</Typography>
+                                    <Typography variant="h6">Факултет</Typography>
+                                    <Typography gutterBottom>{user.faculty}</Typography>
+                                    <Divider sx={{ marginY: 2 }} />
 
-                                    <Typography variant="h6" sx={{ marginBottom: 3 }}>Специалност</Typography>
-                                    <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.specialization}</Typography>
+                                    <Typography variant="h6">Специалност</Typography>
+                                    <Typography gutterBottom>{user.specialization}</Typography>
+                                    <Divider sx={{ marginY: 2 }} />
 
-                                    <Typography variant="h6" sx={{ marginBottom: 3 }}>Поток</Typography>
-                                    <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.stream}</Typography>
+                                    <Typography variant="h6">Поток</Typography>
+                                    <Typography gutterBottom>{user.stream}</Typography>
+                                    <Divider sx={{ marginY: 2 }} />
 
-                                    <Typography variant="h6" sx={{ marginBottom: 3 }}>Активен ли е потребителя?</Typography>
-                                    <Typography gutterBottom sx={{ marginBottom: 5 }}>{user.enabled ? "Активен" : "Неактивен"}</Typography>
+                                    <Typography variant="h6">Активен ли е потребителя?</Typography>
+                                    <Typography gutterBottom>{user.enabled ? "Активен" : "Неактивен"}</Typography>
                                 </Grid>
                             </Grid>
                         )}
