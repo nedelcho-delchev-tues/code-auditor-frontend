@@ -107,6 +107,13 @@ function UserDetails() {
                 body: JSON.stringify(data)
             });
             const responseData = await response.json();
+            
+            setAlert({
+                openAlert: true,
+                type: 'info',
+                message: responseData.message
+            });
+
             if (!response.ok) {
                 setAlert({
                     openAlert: true,
@@ -114,11 +121,6 @@ function UserDetails() {
                     message: response.message
                 });
             }
-            setAlert({
-                openAlert: true,
-                type: 'info',
-                message: responseData.message
-            });
         } catch (error) {
             setAlert({
                 openAlert: true,

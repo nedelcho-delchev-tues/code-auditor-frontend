@@ -16,7 +16,7 @@ export async function login(email, password) {
     return data.access_token;
   } else {
     if(response.status === 403){
-      throw new Error("Нямате достъп до системата. Моля свържете се с администратор при проблем.");
+      throw new Error("Невалидни данни за логин. Моля свържете се с администратор при проблем.");
     }
     throw new Error("Проблем при опита за вход в системата ");
   }
@@ -37,23 +37,6 @@ export async function logout() {
     promptToRelogin();
   } else {
     throw new Error('Проблем при опита за излизане от системата.');
-  }
-}
-
-export async function register(data) {
-  const response = await fetch(`${authUrl}/register`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (response.ok) {
-    const responseData = await response.json();
-    return responseData.access_token;
-  } else {
-    throw new Error('Проблем при регистрацията');
   }
 }
 

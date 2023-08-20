@@ -184,6 +184,13 @@ function Assignments() {
                 body: JSON.stringify(data)
             });
             const responseData = await response.json();
+
+            setAlert({
+                open: true,
+                type: 'info',
+                message: responseData.message
+            });
+
             if (!response.ok) {
                 setAlert({
                     open: true,
@@ -191,11 +198,6 @@ function Assignments() {
                     message: response.message
                 });
             }
-            setAlert({
-                open: true,
-                type: 'info',
-                message: responseData.message
-            });
         } catch (error) {
             setAlert({
                 open: true,
@@ -372,7 +374,7 @@ function Assignments() {
                         </Button>
                         )}
 
-                        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md"> {/* This makes the dialog larger */}
+                        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
                             {dialogType === 'create' ? (
                                 <DialogTitle>Създаване на задание</DialogTitle>
                             ) : (
@@ -437,7 +439,6 @@ function Assignments() {
                                 </Button>
                             </DialogActions>
                         </Dialog>
-
                     </Box>
                 </Box>
             </Box>

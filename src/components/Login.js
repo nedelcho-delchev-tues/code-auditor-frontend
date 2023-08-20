@@ -116,11 +116,11 @@ export default function Login() {
               Вход
             </Button>
             <Grid container>
-              <Grid item xs>
+              {/* <Grid item xs>
                 <Link href="#" variant="body2">
                   Забравена парола?
                 </Link>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 <Link href="/register" variant="body2">
                   {"Нямате акаунт? Регистрация"}
