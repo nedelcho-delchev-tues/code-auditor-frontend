@@ -3,6 +3,7 @@ import { Outlet, Navigate } from 'react-router-dom';
 import { isAuthenticated } from '../services/authenticationService'
 import { userInfo } from '../services/userService';
 import { isAdmin, isProfessor } from '../services/userService';
+import NotFound from '../components/NotFound';
 
 export const AdminRoute = () => {
     const [user, setUser] = useState({});
@@ -20,5 +21,5 @@ export const AdminRoute = () => {
 
     const permission = isAuthenticated() && (isAdmin(user) || isProfessor(user));
 
-    return permission ? <Outlet /> : <Navigate to="/dashboard" />;
+    return permission ? <Outlet /> : <NotFound/>;
 };

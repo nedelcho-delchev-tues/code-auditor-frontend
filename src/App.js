@@ -11,7 +11,7 @@ import SubmissionDetails from './components/SubmissionDetails';
 import Users from './components/Users';
 import Profile from './components/Profile';
 import { AdminRoute } from './security/AdminRoute';
-import NotFoundPage from './components/NotFound';
+import NotFound from './components/NotFound';
 import UserDetails from './components/UserDetails';
 
 
@@ -30,12 +30,11 @@ function App() {
             <Route  path='/submissions/:id' element={<SubmissionDetails/>}/>
             <Route  path='/profile' element={<Profile/>}/>
           </Route>
-          {/* fix admin router below */}
-          <Route path='/' element={<ProtectedRoute/>}>
+          <Route path='/' element={<AdminRoute/>}>
             <Route  path='/users/:id' element={<UserDetails/>}/>
             <Route  path='/users' element={<Users/>}/>
           </Route>
-        <Route path="*" element={<NotFoundPage/>} />
+        <Route path="*" element={<NotFound/>} />
       </Routes>
     </Router>
   );

@@ -8,8 +8,8 @@ import DashboardDrawer from './DashboardDrawer';
 import Typography from '@mui/material/Typography';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import { Paper, Divider, TextField, Button } from '@mui/material';
-import { Card, CardContent } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Paper, Divider, TextField, Button, Card, CardContent, IconButton } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { userInfo, assembleUserName } from '../services/userService';
 
@@ -150,11 +150,44 @@ function SubmissionDetails() {
         setNewFeedback('');
     };
 
+    const handleRemoveFeedback = async (feedbackId) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/v1/feedback/${feedbackId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+            }
+
+            const responseData = await response.json();
+        } catch (error) {
+            console.error("Problem with deleting feedback");
+        }
+    }
+
+    const canOperateFeedback = (user) => {
+        if (user.role === 'ADMIN' || user.role === 'PROFESSOR') return true;
+
+        return false;
+    };
+
+    const shouldDisplayDeleteButton = (user, feedbacks) => {
+        for (let i = 0; i < feedbacks.length; i++) {
+            if (canOperateFeedback(user)) {
+                return true;
+            }
+        }
+        return false;
+    };
+
     const formattedDate = (date) => {
         const createdAt = new Date(date);
         return `${createdAt.toLocaleDateString()} ${createdAt.toLocaleTimeString()}`;
     }
-
+    console.log(feedbacks)
     return (
         <ThemeProvider theme={defaultTheme}>
             <Box sx={{ display: 'flex' }}>
@@ -229,17 +262,30 @@ function SubmissionDetails() {
 
                             {currentFeedbacks.map((feedback, index) => (
                                 <Box key={index} sx={{ marginBottom: 3 }}>
-                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <Typography fontSize={25} variant="commenter" color="textPrimary">
-                                            {feedback.commenter}
-                                        </Typography>
-                                        <Typography variant="caption" color={grey[600]} sx={{ marginLeft: 1 }}>
-                                            {formattedDate(feedback.createdAt)}
-                                        </Typography>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                            <Typography fontSize={25} variant="commenter" color="textPrimary">
+                                                {feedback.commenter}
+                                            </Typography>
+                                            <Typography variant="caption" color={grey[600]} sx={{ marginLeft: 1 }}>
+                                                {formattedDate(feedback.createdAt)}
+                                            </Typography>
+                                        </Box>
+                                        
+                                        {shouldDisplayDeleteButton(user, feedbacks) && (
+                                            <IconButton
+                                                aria-label="delete"
+                                                onClick={() => handleRemoveFeedback(feedback.id)}
+                                                size="small">
+                                                <DeleteIcon fontSize="inherit" />
+                                            </IconButton>
+                                        )}
                                     </Box>
+
                                     <Typography variant="body1" sx={{ marginTop: 1 }}>
                                         {feedback.comment}
                                     </Typography>
+                                    <Divider sx={{ my: 2 }} />
                                 </Box>
                             ))}
 
@@ -270,7 +316,7 @@ function SubmissionDetails() {
                                 </Button>
 
                                 <Typography variant="body1" sx={{ flexGrow: 1, textAlign: 'center' }}>
-                                Страница {feedbacks.length > 0 ? currentPage : 0} от {Math.ceil(feedbacks.length / feedbacksPerPage)}
+                                    Страница {feedbacks.length > 0 ? currentPage : 0} от {Math.ceil(feedbacks.length / feedbacksPerPage)}
                                 </Typography>
 
                                 <Button

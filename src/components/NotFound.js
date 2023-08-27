@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Button, Typography, Container } from '@mui/material';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
-export default function NotFoundPage() {
+export default function NotFound() {
     return (
         <Box
             sx={{

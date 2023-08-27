@@ -18,6 +18,7 @@ import DashboardDrawer from './DashboardDrawer';
 import { getCurrentUser } from '../services/authenticationService';
 import { userInfo } from '../services/userService';
 import Alert from '@mui/material/Alert';
+import { assembleUserName } from '../services/userService';
 
 
 const defaultTheme = createTheme();
@@ -43,7 +44,7 @@ const Submissions = () => {
 
     const shouldDisplayDeleteColumn = (user, submissions) => {
         for (let i = 0; i < submissions.length; i++) {
-            if (canOperateSubmissions(user, submissions[i].userId)) {
+            if (canOperateSubmissions(user, submissions[i].user.id)) {
                 return true;
             }
         }
@@ -189,8 +190,8 @@ const Submissions = () => {
                                             }
                                         }}
                                     >
-                                        <TableCell>{submission.userId}</TableCell>
-                                        <TableCell>{submission.assignmentId}</TableCell>
+                                        <TableCell>{assembleUserName(submission.user)}</TableCell>
+                                        <TableCell>{submission.assignment.title}</TableCell>
                                         <TableCell>{submission.filesPresent ? <CheckIcon style={{
                                             color: "#34b233",
                                         }} /> : <CloseIcon style={{
@@ -201,7 +202,7 @@ const Submissions = () => {
                                         }} /> : <CloseIcon style={{
                                             color: "#cf1020",
                                         }} />}</TableCell>
-                                        {canOperateSubmissions(user, submission.userId) && (
+                                        {canOperateSubmissions(user, submission.user.id) && (
                                             <TableCell>
                                                 <Button
                                                     variant="contained"
