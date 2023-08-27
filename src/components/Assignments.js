@@ -20,10 +20,10 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import Alert from '@mui/material/Alert';
+import SearchIcon from '@mui/icons-material/Search';
 import { Typography } from '@mui/material';
 import { getCurrentUser } from '../services/authenticationService';
 import { userInfo } from '../services/userService';
-import { timestampToDate } from '../utils/Utils';
 import DashboardDrawer from './DashboardDrawer';
 
 const defaultTheme = createTheme();
@@ -44,6 +44,7 @@ function Assignments() {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [fileFields, setFileFields] = useState([{ value: '' }]);
+    const [searchTerm, setSearchTerm] = useState('');
     const [open, setOpen] = useState(false);
     const [user, setUser] = useState([])
     const [alert, setAlert] = useState({
@@ -70,8 +71,22 @@ function Assignments() {
     }
 
     useEffect(() => {
-        fetchAssignments();
-    }, []);
+        if (searchTerm.trim() === "") {
+            fetchAssignments();
+        } else {
+            console.log(searchTerm)
+            fetch(`http://localhost:8080/api/v1/assignment/search?keyword=${searchTerm}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+                .then(response => response.json())
+                .then(data => setAssignments(data))
+                .catch(error => console.error('Error fetching assignments:', error));
+        }
+    }, [searchTerm]);
 
     const fetchAssignments = () => {
         fetch('http://localhost:8080/api/v1/assignment',
@@ -280,6 +295,11 @@ function Assignments() {
         }
     }
 
+    const formatDate = (date) => {
+        const createdAt = new Date(date);
+        return `${createdAt.toLocaleDateString()} ${createdAt.toLocaleTimeString()}`;
+    }
+
     return (
         <ThemeProvider theme={defaultTheme}>
             <Box sx={{ display: 'flex' }}>
@@ -304,9 +324,38 @@ function Assignments() {
                             {alert.message}
                         </Alert>
                     )}
+
                     <Typography variant="h5" align="center" marginBottom={1}>
                         Задания
                     </Typography>
+
+                    <TextField
+                        label="Търсене по заглавие или професор"
+                        variant="outlined"
+                        value={searchTerm}
+                        onChange={e => setSearchTerm(e.target.value)}
+                        sx={{
+                            width: '30%',
+                            marginBottom: 2,
+                            marginRight: 0,
+                            float: 'right',
+                            backgroundColor: '#fff',
+                            "& .MuiOutlinedInput-root": {
+                                "&.Mui-focused fieldset": {
+                                    borderColor: "primary.main",
+                                },
+                                "& fieldset": {
+                                    borderColor: "primary.main"
+                                },
+                            }
+                        }}
+                        InputProps={{
+                            startAdornment: (
+                                <SearchIcon color="action" />
+                            ),
+                        }}
+                    />
+
                     <TableContainer component={Paper}>
                         <Table>
                             <TableHead>
@@ -341,7 +390,7 @@ function Assignments() {
                                     >
                                         <TableCell>{assignment.title}</TableCell>
                                         <TableCell>{assignment.user.firstName} {assignment.user.lastName}</TableCell>
-                                        <TableCell>{timestampToDate(assignment.createAt)}</TableCell>
+                                        <TableCell>{formatDate(assignment.createdAt)}</TableCell>
                                         {canOperateAssignments(user) && (
                                             <TableCell>
                                                 <Button variant="contained" onClick={(e) => {

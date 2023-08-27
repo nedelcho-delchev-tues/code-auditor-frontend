@@ -357,7 +357,7 @@ function UserDetails() {
                                             <TextField
                                                 margin="dense"
                                                 id="lastName"
-                                                label="Второ име"
+                                                label="Фамилно име"
                                                 type="text"
                                                 fullWidth
                                                 rows={4}
@@ -423,7 +423,7 @@ function UserDetails() {
                                             <TextField
                                                 margin="dense"
                                                 id="lastName"
-                                                label="Второ име"
+                                                label="Фамилно име"
                                                 type="text"
                                                 fullWidth
                                                 rows={4}

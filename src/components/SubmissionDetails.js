@@ -40,19 +40,6 @@ function SubmissionDetails() {
     const currentFeedbacks = sortedFeedbacks.slice(indexOfFirstFeedback, indexOfLastFeedback);
 
     useEffect(() => {
-        fetchUserData();
-    }, []);
-
-    async function fetchUserData() {
-        try {
-            const data = await userInfo();
-            setUser(data);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    }
-
-    useEffect(() => {
         fetch(`http://localhost:8080/api/v1/submission/${parseInt(id)}`,
             {
                 method: 'GET',
@@ -73,26 +60,39 @@ function SubmissionDetails() {
             .catch(error => {
                 console.error('Error fetching assignments:', error);
             });
-    }, [id]);
+    }, []);
 
     useEffect(() => {
-        if (!submission.assignmentId) return;
+        fetchUserData();
+    }, []);
 
-        fetch(`http://localhost:8080/api/v1/assignment/${submission.assignmentId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                setAssignment(data);
-            })
-            .catch(error => {
-                console.error('Error fetching assignment:', error);
-            });
-    }, [submission.assignmentId]);
+    async function fetchUserData() {
+        try {
+            const data = await userInfo();
+            setUser(data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
+
+    // useEffect(() => {
+    //     if (!submission.assignmentId) return;
+
+    //     fetch(`http://localhost:8080/api/v1/assignment/${submission.assignmentId}`, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Authorization': `Bearer ${token}`
+    //         }
+    //     })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             setAssignment(data);
+    //         })
+    //         .catch(error => {
+    //             console.error('Error fetching assignment:', error);
+    //         });
+    // }, [submission.assignmentId]);
 
     useEffect(() => {
         fetch(`http://localhost:8080/api/v1/submission/${parseInt(id)}/feedbacks`,
@@ -122,6 +122,13 @@ function SubmissionDetails() {
     };
 
     const handleFeedbackSubmit = () => {
+        const feedback =
+        {
+            "studentSubmissionId": parseInt(id),
+            "comment": newFeedback,
+            "commenter": assembleUserName(user)
+        }
+
         fetch('http://localhost:8080/api/v1/feedback', {
             method: 'POST',
             headers: {
@@ -129,13 +136,7 @@ function SubmissionDetails() {
                 'Authorization': `Bearer ${token}`
 
             },
-            body: JSON.stringify(
-                {
-                    "studentSubmissionId": parseInt(id),
-                    "comment": newFeedback,
-                    "commenter": assembleUserName(user)
-                }
-            )
+            body: JSON.stringify(feedback)
         }).then(response => {
             if (response.status === 401) {
                 navigate("/login")
@@ -146,7 +147,7 @@ function SubmissionDetails() {
         });;
 
 
-        setFeedbacks(prevFeedbacks => [...prevFeedbacks, newFeedback]);
+        setFeedbacks(currentFeedbacks => [feedback, ...currentFeedbacks]);
         setNewFeedback('');
     };
 
@@ -184,10 +185,28 @@ function SubmissionDetails() {
     };
 
     const formattedDate = (date) => {
-        const createdAt = new Date(date);
-        return `${createdAt.toLocaleDateString()} ${createdAt.toLocaleTimeString()}`;
+        if (date === undefined) {
+            return getCurrentTime();
+        } else {
+            const createdAt = new Date(date);
+            return `${createdAt.toLocaleDateString()} ${createdAt.toLocaleTimeString()}`;
+        }
     }
-    console.log(feedbacks)
+
+    const getCurrentTime = () => {
+        const now = new Date();
+
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+
+        return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    }
+
     return (
         <ThemeProvider theme={defaultTheme}>
             <Box sx={{ display: 'flex' }}>
@@ -203,7 +222,7 @@ function SubmissionDetails() {
                         flexGrow: 1,
                         height: '100vh',
                         overflow: 'auto',
-                        pt: 10, // Adjust this padding to account for the header's height
+                        pt: 10,
                         px: 3
                     }}
                 >
@@ -215,7 +234,7 @@ function SubmissionDetails() {
                         <Card variant="outlined" style={{ marginBottom: '16px' }}>
                             <CardContent>
                                 <Typography variant="h6">
-                                    Задача: {assignment.title}
+                                    Заглавие: {submission.assignment ? submission.assignment.title : ' '}
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -271,7 +290,7 @@ function SubmissionDetails() {
                                                 {formattedDate(feedback.createdAt)}
                                             </Typography>
                                         </Box>
-                                        
+
                                         {shouldDisplayDeleteButton(user, feedbacks) && (
                                             <IconButton
                                                 aria-label="delete"

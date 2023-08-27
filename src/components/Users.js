@@ -256,8 +256,8 @@ function Users() {
                                     <Grid item xs={12} sm={6}>
                                         <TextField
                                             margin="dense"
-                                            id="description"
-                                            label="Второ име"
+                                            id="lastName"
+                                            label="Фамилно име"
                                             type="text"
                                             fullWidth
                                             rows={4}
@@ -268,7 +268,7 @@ function Users() {
                                     <Grid item xs={12} sm={6}>
                                         <TextField
                                             margin="dense"
-                                            id="description"
+                                            id="email"
                                             label="Мейл"
                                             type="text"
                                             fullWidth
@@ -296,9 +296,9 @@ function Users() {
                                     <Grid item xs={12} sm={6}>
                                         <TextField
                                             margin="dense"
-                                            id="description"
+                                            id="password"
                                             label="Парола"
-                                            type="text"
+                                            type="password"
                                             fullWidth
                                             rows={4}
                                             defaultValue={password}
