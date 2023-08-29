@@ -96,6 +96,7 @@ function stringAvatar(name) {
 const drawerWidth = 240;
 
 function DashboardDrawer() {
+    const token = getCurrentUser();
     const [anchorDropDown, setAnchorDropDown] = useState(null);
     const [open, setOpen] = useState(true);
     const [user, setUser] = useState([]);
@@ -120,7 +121,6 @@ function DashboardDrawer() {
 
 
     useEffect(() => {
-        const token = getCurrentUser();
         setJwtToken(token);
         fetch(`http://localhost:8080/api/v1/user`, {
             method: 'GET',

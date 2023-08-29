@@ -39,8 +39,6 @@ export default function Register() {
   });
 
   const onSubmit = data => {
-    console.log(data);
-    // Now use the data to make your API call
     register(data);
   };
 
@@ -61,7 +59,6 @@ export default function Register() {
         localStorage.setItem("token", token);
 
         navigate("/dashboard");
-        console.log('Data submitted successfully:', responseData);
       } else {
         setAlert({
           openAlert: true,

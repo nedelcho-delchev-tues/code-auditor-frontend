@@ -15,14 +15,13 @@ import { userInfo, assembleUserName } from '../services/userService';
 
 const defaultTheme = createTheme();
 
-const token = getCurrentUser();
-
 const decodeBase64ToHTML = (base64String) => {
     const decodedHTML = atob(base64String);
     return decodedHTML;
 };
 
 function SubmissionDetails() {
+    const token = getCurrentUser();
     const { id } = useParams();
     const navigate = useNavigate();
     const [user, setUser] = useState({});
@@ -265,7 +264,7 @@ function SubmissionDetails() {
                             Тук може да видите дали кодът има някакви проблеми:
                         </Typography>
                         <Box
-                            style={{ backgroundColor: 'white', border: '1px solid #ccc', padding: '16px', borderRadius: '8px' }}
+                            style={{ backgroundColor: 'white', border: '1px solid #ccc', padding: '16px', borderRadius: '8px', pointerEvents: 'none' }}
                             dangerouslySetInnerHTML={{
                                 __html: submission.problems
                                     ? decodeBase64ToHTML(submission.problems)

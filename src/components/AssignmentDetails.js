@@ -18,8 +18,8 @@ import { Card, CardContent } from '@mui/material';
 
 const defaultTheme = createTheme();
 
-const token = getCurrentUser();
 function AssignmentDetails() {
+  const token = getCurrentUser();
   const { id } = useParams();
   const [assignment, setAssignment] = useState({});
   const [alert, setAlert] = useState({

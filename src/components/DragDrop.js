@@ -17,9 +17,8 @@ const ErrorTypography = styled(Typography)({
     color: 'red',
 });
 
-const token = getCurrentUser();
-
 const DragDrop = () => {
+    const token = getCurrentUser();
     const { id } = useParams();
     const [zipFile, setZipFile] = useState(null);
     const [submission, setSubmission] = useState(null);
@@ -27,26 +26,26 @@ const DragDrop = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/v1/assignment/${id}/get_submission`,
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            .then(response => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/v1/assignment/${id}/get_submission`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 if (response.status === 401) {
                     navigate("/login");
-                  }
-                  return response.json()
-                })
-            .then(data => {
+                }
+                const data = await response.json();
                 setSubmission(data);
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Error fetching submission:', error);
-            });
-    }, [id])
+            }
+        };
+    
+        fetchData();
+    }, [id]);
 
     useEffect(() => {
         if (isSubmissionPresent(submission)) {

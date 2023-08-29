@@ -135,6 +135,28 @@ const Submissions = () => {
         }
     }
 
+    const base64ToUint8Array = (base64) => {
+        const raw = atob(base64);
+        const uint8Array = new Uint8Array(raw.length);
+        for (let i = 0; i < raw.length; i++) {
+            uint8Array[i] = raw.charCodeAt(i);
+        }
+        return uint8Array;
+    };
+
+    const handleDownload = (base64Content, fileName = "download.zip") => {
+        const byteContent = base64ToUint8Array(base64Content);
+        const blob = new Blob([byteContent], { type: 'application/zip' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    console.log(submissions)
+
     return (
         <ThemeProvider theme={defaultTheme}>
             <Box sx={{ display: 'flex' }}>
@@ -192,16 +214,26 @@ const Submissions = () => {
                                     >
                                         <TableCell>{assembleUserName(submission.user)}</TableCell>
                                         <TableCell>{submission.assignment.title}</TableCell>
-                                        <TableCell>{submission.filesPresent ? <CheckIcon style={{
-                                            color: "#34b233",
-                                        }} /> : <CloseIcon style={{
-                                            color: "#cf1020",
-                                        }} />}</TableCell>
-                                        <TableCell>{submission.buildPassing ? <CheckIcon style={{
-                                            color: "#34b233",
-                                        }} /> : <CloseIcon style={{
-                                            color: "#cf1020",
-                                        }} />}</TableCell>
+                                        <TableCell>
+                                            {submission.filesPresent ? <CheckIcon style={{ color: "#34b233" }} /> : <CloseIcon style={{ color: "#cf1020" }} />}
+                                        </TableCell>
+                                        <TableCell>{submission.buildPassing ?
+                                            <CheckIcon style={{ color: "#34b233" }} /> : <CloseIcon style={{ color: "#cf1020" }} />}
+                                        </TableCell>
+                                        {canOperateSubmissions(user, submission.user.id) && (
+                                            <TableCell>
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleDownload(submission.content, submission.fileName);  // Adjust file name if needed
+                                                    }}
+                                                >
+                                                    Свали проект
+                                                </Button>
+                                            </TableCell>
+                                        )}
                                         {canOperateSubmissions(user, submission.user.id) && (
                                             <TableCell>
                                                 <Button

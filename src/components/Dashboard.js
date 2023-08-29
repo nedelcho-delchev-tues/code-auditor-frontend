@@ -20,7 +20,6 @@ function Dashboard() {
 
   useEffect(() => {
     if (localStorage.getItem('firstLogin') === null) {
-
       setIsFirstLogin(true);
       localStorage.setItem('firstLogin', 'false');
     }

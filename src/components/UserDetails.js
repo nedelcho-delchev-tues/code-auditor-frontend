@@ -516,7 +516,6 @@ function UserDetails() {
                                 </Button>
                                 <Button onClick={() => {
                                     const data = gatherData();
-                                    console.log("BUTTON CLICK " + JSON.stringify(data));
                                     handleUpdate(data);
                                 }} variant="contained" color="primary">
                                     Промяна

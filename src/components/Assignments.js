@@ -74,7 +74,6 @@ function Assignments() {
         if (searchTerm.trim() === "") {
             fetchAssignments();
         } else {
-            console.log(searchTerm)
             fetch(`http://localhost:8080/api/v1/assignment/search?keyword=${searchTerm}`, {
                 method: 'GET',
                 headers: {

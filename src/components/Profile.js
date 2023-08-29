@@ -67,9 +67,6 @@ function Profile() {
     };
 
     const handleChangePassword = async () => {
-        console.log("password " + password);
-        console.log("newPassword " + newPassword);
-        console.log("newPasswordRepeat " + newPasswordRepeat);
         try {
             const response = await fetch(`http://localhost:8080/api/v1/user/${parseInt(user.id)}/change_password`, {
                 method: 'POST',
