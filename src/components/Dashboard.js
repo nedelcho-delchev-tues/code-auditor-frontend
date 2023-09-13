@@ -44,7 +44,7 @@ function Dashboard() {
   }, []);
 
   const fetchSubmissionCount = () => {
-    fetch('http://localhost:8080/api/v1/user/count_submissions',
+    fetch('http://localhost:8080/api/v1/user/count-submissions',
       {
         method: 'GET',
         headers: {
@@ -64,7 +64,7 @@ function Dashboard() {
   }
 
   const fetchAssignmentCount = () => {
-    fetch('http://localhost:8080/api/v1/assignment/count_assignments',
+    fetch('http://localhost:8080/api/v1/assignment/count-assignments',
       {
         method: 'GET',
         headers: {

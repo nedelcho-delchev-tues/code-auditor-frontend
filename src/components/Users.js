@@ -50,7 +50,7 @@ function Users() {
 
     useEffect(() => {
         const fetchAssignments = () => {
-            fetch('http://localhost:8080/api/v1/admin/all_users',
+            fetch('http://localhost:8080/api/v1/admin/all-users',
                 {
                     method: 'GET',
                     headers: {

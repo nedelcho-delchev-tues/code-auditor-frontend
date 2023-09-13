@@ -96,7 +96,7 @@ function AssignmentDetails() {
               <Typography variant="h8" align="left" sx={{
                 maxWidth: '100%',
                 wordWrap: 'break-word',
-                overflowWrap: 'break-word',
+                overflowWrap: 'break-word'
               }}
               >
                 {assignment.description}

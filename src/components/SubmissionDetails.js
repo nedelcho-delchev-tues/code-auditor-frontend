@@ -264,7 +264,11 @@ function SubmissionDetails() {
                             Тук може да видите дали кодът има някакви проблеми:
                         </Typography>
                         <Box
-                            style={{ backgroundColor: 'white', border: '1px solid #ccc', padding: '16px', borderRadius: '8px', pointerEvents: 'none' }}
+                            style={{
+                                backgroundColor: 'white', border: '1px solid #ccc', padding: '16px', borderRadius: '8px', pointerEvents: 'none', maxWidth: '100%',
+                                wordWrap: 'break-word',
+                                overflowWrap: 'break-word'
+                            }}
                             dangerouslySetInnerHTML={{
                                 __html: submission.problems
                                     ? decodeBase64ToHTML(submission.problems)

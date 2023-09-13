@@ -88,7 +88,7 @@ const DragDrop = () => {
     }
 
     const removeFile = () => {
-        fetch(`http://localhost:8080/api/v1/assignment/${id}/delete_submission`,
+        fetch(`http://localhost:8080/api/v1/assignment/${id}/delete-submission`,
             {
                 method: 'DELETE',
                 headers: {

@@ -463,7 +463,7 @@ function Assignments() {
                                             id={`file-${index}`}
                                             label="Специален файл"
                                             type="text"
-                                            value={dialogType === 'create' ? file.value || '' : editingAssignment.specialFiles[index]}
+                                            value={fileFields[index]?.value || ''}
                                             onChange={(e) => handleFileChange(e, index)}
                                         />
                                         <IconButton onClick={() => removeFileField(index)} style={{ marginLeft: '5px' }}>

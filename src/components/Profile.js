@@ -68,7 +68,7 @@ function Profile() {
 
     const handleChangePassword = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/v1/user/${parseInt(user.id)}/change_password`, {
+            const response = await fetch(`http://localhost:8080/api/v1/user/${parseInt(user.id)}/change-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
