@@ -523,25 +523,27 @@ function UserDetails() {
                             </DialogActions>
                         </Dialog>
 
-                        {user && user.enabled === true ? (
-                            <Button
-                                variant="contained"
-                                color="error"
-                                onClick={() => {
-                                    handleDisable();
-                                }}
-                            >
-                                Деактивиране
-                            </Button>) : (
-                            <Button
-                                variant="contained"
-                                color="success"
-                                onClick={() => {
-                                    handleEnable();
-                                }}
-                            >
-                                Активиране
-                            </Button>)}
+                        {
+                            isAdmin(currentUser) && (
+                                user && user.enabled === true ? (
+                                    <Button
+                                        variant="contained"
+                                        color="error"
+                                        onClick={handleDisable}
+                                    >
+                                        Деактивиране
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        variant="contained"
+                                        color="success"
+                                        onClick={handleEnable}
+                                    >
+                                        Активиране
+                                    </Button>
+                                )
+                            )
+                        }
                     </Box>
                 </Box>
             </Box>

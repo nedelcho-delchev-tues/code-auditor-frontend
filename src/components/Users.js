@@ -23,7 +23,7 @@ import Grid from '@mui/material/Grid';
 import { InputLabel, FormControl } from '@mui/material';
 import { Typography } from '@mui/material';
 import { getCurrentUser } from '../services/authenticationService';
-import { userInfo } from '../services/userService';
+import { isProfessor, userInfo } from '../services/userService';
 import DashboardDrawer from './DashboardDrawer';
 import { assembleUserName } from '../services/userService';
 import { isAdmin } from '../services/userService';
@@ -185,7 +185,7 @@ function Users() {
                                     <TableCell sx={{ fontWeight: 'bold' }}>Мейл</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>Роля</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>Статус на потребителя</TableCell>
-                                    {isAdmin(currentUser) && (
+                                    {(isAdmin(currentUser) || isProfessor(currentUser)) && (
                                         <TableCell sx={{ fontWeight: 'bold' }}
                                         >
                                         </TableCell>

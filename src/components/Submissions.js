@@ -155,8 +155,6 @@ const Submissions = () => {
         document.body.removeChild(link);
     };
 
-    console.log(submissions)
-
     return (
         <ThemeProvider theme={defaultTheme}>
             <Box sx={{ display: 'flex' }}>
